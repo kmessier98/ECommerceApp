@@ -1,0 +1,33 @@
+@ECommerceApp.Api_HostAddress = https://localhost:7203
+
+GET {{ECommerceApp.Api_HostAddress}}/api/tests
+Accept: application/json
+
+###
+
+GET {{ECommerceApp.Api_HostAddress}}/api/tests/1
+Accept: application/json
+
+###
+
+POST {{ECommerceApp.Api_HostAddress}}/api/tests
+Content-Type: application/json
+
+{
+  "nom": "Nouvel élément"
+}
+
+###
+
+PUT {{ECommerceApp.Api_HostAddress}}/api/tests/1
+Content-Type: application/json
+
+{
+  "nom": "Élément modifié"
+}
+
+###
+
+DELETE {{ECommerceApp.Api_HostAddress}}/api/tests/2
+
+###

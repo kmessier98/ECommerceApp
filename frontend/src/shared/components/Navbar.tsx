@@ -13,8 +13,8 @@ interface NavbarProps {
 
 export function Navbar({ cartItemCount = 0 }: NavbarProps) {
   return (
-    <header className="bg-creme">
-      <nav className="flex items-center gap-8 px-4 py-3">
+    <header className="bg-creme border-b border-stone-200 px-4">
+      <nav className="mx-auto flex max-w-6xl items-center gap-8 py-3">
         <Link to="/" className="font-display text-encre text-2xl font-semibold tracking-tight">
           Nordet
         </Link>

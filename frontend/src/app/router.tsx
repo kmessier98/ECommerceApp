@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { ConnexionPage, CreerComptePage } from '@/features/auth'
 import { CataloguePage } from '@/features/catalogue'
-import { CommandesPage } from '@/features/commandes'
+import { CommandesPage, ConfirmationPage } from '@/features/commandes'
 import { PanierPage } from '@/features/panier'
 import { TestsPage } from '@/features/tests'
 import { CompteLayout } from '@/shared/components/CompteLayout'
@@ -19,6 +19,8 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to="/catalogue" replace /> },
       { path: 'catalogue', element: <CataloguePage /> },
       { path: 'panier', element: <PanierPage /> },
+      // Landing page after checkout, once the payment webhook has confirmed the order.
+      { path: 'commandes/:numero/confirmation', element: <ConfirmationPage /> },
       {
         element: <CompteLayout />,
         children: [

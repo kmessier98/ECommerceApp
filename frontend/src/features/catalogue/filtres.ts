@@ -37,9 +37,3 @@ export function appliquerFiltres(produits: Produit[], f: Filtres, tri: Tri) {
     )
     .sort(comparateurs[tri])
 }
-
-const prixFormat = new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' })
-
-export function formatPrix(prix: number) {
-  return prixFormat.format(prix)
-}

@@ -1,4 +1,4 @@
-import { formatPrix } from '../filtres'
+import { formatPrix } from '@/shared/utils/format'
 import type { Produit } from '../types'
 
 export function ProduitCard({ produit }: { produit: Produit }) {

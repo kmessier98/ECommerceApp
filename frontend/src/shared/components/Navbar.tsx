@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useMatch } from 'react-router-dom'
 
 const links = [
   { to: '/catalogue', label: 'Catalogue' },
@@ -12,6 +12,8 @@ interface NavbarProps {
 }
 
 export function Navbar({ cartItemCount = 0 }: NavbarProps) {
+  const isCatalogue = useMatch('/catalogue/*') !== null
+
   return (
     <header className="bg-creme border-b border-stone-200 px-4">
       <nav className="mx-auto flex max-w-6xl items-center gap-8 py-3">
@@ -34,34 +36,38 @@ export function Navbar({ cartItemCount = 0 }: NavbarProps) {
           ))}
         </ul>
 
-        <form role="search" className="ml-auto" onSubmit={(e) => e.preventDefault()}>
-          <label className="flex w-60 items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 focus-within:border-stone-500">
-            <SearchIcon />
-            <input
-              type="search"
-              placeholder="Rechercher un produit"
-              aria-label="Rechercher un produit"
-              className="w-full bg-transparent text-sm placeholder:text-stone-500 focus:outline-none"
-            />
-          </label>
-        </form>
+        <div className="ml-auto flex items-center gap-8">
+          {isCatalogue && (
+            <form role="search" onSubmit={(e) => e.preventDefault()}>
+              <label className="flex w-60 items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 focus-within:border-stone-500">
+                <SearchIcon />
+                <input
+                  type="search"
+                  placeholder="Rechercher un produit"
+                  aria-label="Rechercher un produit"
+                  className="w-full bg-transparent text-sm placeholder:text-stone-500 focus:outline-none"
+                />
+              </label>
+            </form>
+          )}
 
-        <div className="flex items-center gap-6">
-          <Link to="/compte" aria-label="Mon compte" className="text-encre hover:text-brique">
-            <UserIcon />
-          </Link>
-          <Link
-            to="/panier"
-            aria-label={`Panier (${cartItemCount} article${cartItemCount > 1 ? 's' : ''})`}
-            className="text-encre hover:text-brique relative"
-          >
-            <BagIcon />
-            {cartItemCount > 0 && (
-              <span className="bg-brique absolute -top-2 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-semibold text-white">
-                {cartItemCount}
-              </span>
-            )}
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link to="/compte" aria-label="Mon compte" className="text-encre hover:text-brique">
+              <UserIcon />
+            </Link>
+            <Link
+              to="/panier"
+              aria-label={`Panier (${cartItemCount} article${cartItemCount > 1 ? 's' : ''})`}
+              className="text-encre hover:text-brique relative"
+            >
+              <BagIcon />
+              {cartItemCount > 0 && (
+                <span className="bg-brique absolute -top-2 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-semibold text-white">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
+          </div>
         </div>
       </nav>
     </header>

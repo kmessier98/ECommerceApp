@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { ConnexionPage, CreerComptePage } from '@/features/auth'
 import { CataloguePage } from '@/features/catalogue'
 import { CommandesPage } from '@/features/commandes'
+import { PanierPage } from '@/features/panier'
 import { TestsPage } from '@/features/tests'
 import { CompteLayout } from '@/shared/components/CompteLayout'
 import { Layout } from '@/shared/components/Layout'
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/catalogue" replace /> },
       { path: 'catalogue', element: <CataloguePage /> },
+      { path: 'panier', element: <PanierPage /> },
       {
         element: <CompteLayout />,
         children: [

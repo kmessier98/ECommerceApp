@@ -1,13 +1,14 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { ConnexionPage } from '@/features/auth'
+import { ConnexionPage, CreerComptePage } from '@/features/auth'
 import { CataloguePage } from '@/features/catalogue'
 import { TestsPage } from '@/features/tests'
 import { Layout } from '@/shared/components/Layout'
 import { NotFound } from '@/shared/components/NotFound'
 
 export const router = createBrowserRouter([
-  // Full-screen page with its own header, so it sits outside the shared Layout.
+  // Full-screen pages with their own header, so they sit outside the shared Layout.
   { path: 'connexion', element: <ConnexionPage /> },
+  { path: 'inscription', element: <CreerComptePage /> },
   {
     element: <Layout />,
     children: [

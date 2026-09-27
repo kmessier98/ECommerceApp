@@ -11,6 +11,8 @@ namespace ECommerceApp.Application.Mapping
             CreateMap<Test, TestDto>();
             CreateMap<CreateTestDto, Test>();
             CreateMap<UpdateTestDto, Test>();
+            CreateMap<Utilisateur, UtilisateurDto>()
+                .ForMember(dest => dest.Courriel, opt => opt.MapFrom(src => src.Email));
         }
     }
 }

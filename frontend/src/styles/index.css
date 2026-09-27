@@ -1,7 +1,16 @@
 @import 'tailwindcss';
 
+@theme {
+  --font-sans: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+
+  --color-creme: #f4f1ec;
+  --color-encre: #1c1a17;
+  --color-brique: #9c3a22;
+}
+
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply bg-creme text-encre antialiased;
   }
 }

@@ -1,10 +1,11 @@
 ﻿using ECommerceApp.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace ECommerceApp.Infrastructure.Data
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityUserContext<Utilisateur, int>(options)
     {
         public DbSet<Test> Tests { get; set; }
 
@@ -12,7 +13,12 @@ namespace ECommerceApp.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuration Fluent API des relations (HasOne/HasMany/UsingEntity...) ici.
+            modelBuilder.Entity<Utilisateur>(u =>
+            {
+                u.ToTable("Utilisateur");
+                u.Property(p => p.Prenom).HasMaxLength(100);
+                u.Property(n => n.Nom).HasMaxLength(100);
+            });
 
             SeedData(modelBuilder);
         }

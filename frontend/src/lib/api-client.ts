@@ -39,6 +39,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
       ...(init.body ? { 'Content-Type': 'application/json' } : {}),
       ...init.headers,
     },
+    credentials: 'include',
   })
 
   if (!response.ok) throw new ApiError(response.status, await parseErrors(response))

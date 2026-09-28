@@ -20,7 +20,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermettreClient", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins(
+                  "http://localhost:5173",   // React (Vite)
+                  "https://localhost:7097",  // Blazor WebAssembly (profil https)
+                  "http://localhost:5297")   // Blazor WebAssembly (profil http)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

@@ -15,7 +15,7 @@ Full-stack e-commerce app split into two independent projects, each with its own
 1. Backend, from `backend/`: `dotnet run --project ECommerceApp.Api --launch-profile https` (serves `https://localhost:7203`; requires `ConnectionStrings:DefaultConnection` in `ECommerceApp.Api/appsettings.json` and an up-to-date database).
 2. Frontend, from `frontend/`: `npm run dev` (`http://localhost:5173`).
 
-In dev the frontend calls relative `/api/...` URLs and the Vite proxy forwards them to the API, so the frontend and the API share one origin and the auth cookie needs no setup. The backend also has a CORS policy (`PermettreClient`) allowing `http://localhost:5173` with credentials, used only if the frontend calls the API directly via `VITE_API_BASE_URL`. A 502 from `/api/...` in dev means the proxy cannot reach the API: it is not running, or was started with the `http` profile (port 5077) instead of `https`.
+In dev the frontend calls relative `/api/...` URLs and the Vite proxy forwards them to the API, so the frontend and the API share one origin and the auth cookie needs no setup. The backend also has a CORS policy (`PermettreClient`) allowing credentials from `http://localhost:5173` (React, used only if the frontend calls the API directly via `VITE_API_BASE_URL`) and from `https://localhost:7097` / `http://localhost:5297` (a local Blazor WebAssembly auth-learning client in `auth-blazor/`, git-ignored, which always calls the API directly). A 502 from `/api/...` in dev means the proxy cannot reach the API: it is not running, or was started with the `http` profile (port 5077) instead of `https`.
 
 Only the frontend has tests and linting (`npm run test:run`, `npm run lint`, `npm run typecheck`); the backend has neither.
 

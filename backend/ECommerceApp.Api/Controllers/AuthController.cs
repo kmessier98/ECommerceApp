@@ -18,14 +18,14 @@ namespace ECommerceApp.Api.Controllers
         }
 
         [HttpPost("inscription")]
-        public async Task<ActionResult> Inscrire([FromBody] InscriptionDto dto)
+        public async Task<ActionResult<UtilisateurDto>> Inscrire([FromBody] InscriptionDto dto)
         {
             var utilisateur = await _authService.Inscrire(dto);
             return CreatedAtAction(nameof(GetUtilisateurCourant), utilisateur);
         }
 
         [HttpPost("connexion")]
-        public async Task<ActionResult> Connecter([FromBody] ConnexionDto dto)
+        public async Task<ActionResult<UtilisateurDto>> Connecter([FromBody] ConnexionDto dto)
         {
             var utilisateur = await _authService.Connecter(dto);
             return Ok(utilisateur);
@@ -40,7 +40,7 @@ namespace ECommerceApp.Api.Controllers
 
         [Authorize]
         [HttpGet("moi")]
-        public async Task<ActionResult> GetUtilisateurCourant()
+        public async Task<ActionResult<UtilisateurDto>> GetUtilisateurCourant()
         {
             int id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var utilisateur = await _authService.GetUtilisateurCourant(id);

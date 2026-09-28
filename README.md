@@ -30,12 +30,25 @@ npm install
 npm run dev
 ```
 
-En développement, le frontend appelle des URL relatives `/api/...` que le proxy Vite redirige vers l'API : aucune configuration CORS n'est nécessaire.
+En développement, le frontend appelle des URL relatives `/api/...` que le proxy Vite redirige vers l'API. Le frontend et l'API ont donc la même origine : aucune configuration CORS n'est nécessaire, et le cookie de connexion fonctionne tout seul.
+
+> Une erreur **502 Bad Gateway** sur `/api/...` signifie que le proxy n'arrive pas à joindre l'API : elle n'est pas démarrée, ou elle a été lancée avec le profil `http` (port 5077) au lieu de `https`.
+
+## Comptes utilisateurs
+
+Les visiteurs peuvent créer un compte, se connecter (avec l'option « Rester connecté ») et se déconnecter. L'authentification repose sur ASP.NET Core Identity et un **cookie HttpOnly** posé par l'API : le frontend ne stocke aucun jeton, le navigateur envoie le cookie tout seul. Il n'y a pas encore de rôles.
+
+| Pour protéger… | Comment | Rôle |
+| --- | --- | --- |
+| un endpoint de l'API | `[Authorize]` sur le contrôleur ou l'action | La vraie sécurité : répond 401 sans cookie valide. |
+| une page du frontend | placer ses routes sous `<RequireAuth />` dans `router.tsx` | Le confort : redirige vers `/connexion`, puis ramène à la page demandée. |
+
+Les règles du mot de passe (8 caractères, une majuscule, un chiffre, un caractère spécial) sont définies des deux côtés et doivent rester identiques. Détails dans les README du [backend](backend/README.md#authentification) et du [frontend](frontend/README.md#authentification).
 
 ## Contrat entre frontend et backend
 
 - Les types TypeScript de chaque feature (`frontend/src/features/<nom>/types.ts`) reflètent les DTO du backend (`backend/ECommerceApp.Application/DTOs`).
-- Toutes les erreurs de l'API ont la forme `{ "errors": ["..."] }` ; le frontend les expose via `ApiError`.
+- Toutes les erreurs de l'API ont la forme `{ "errors": ["..."] }`, y compris le 401 renvoyé aux visiteurs non connectés ; le frontend les expose via `ApiError`.
 
 Toute modification d'un côté doit être répercutée de l'autre.
 

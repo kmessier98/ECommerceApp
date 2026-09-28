@@ -1,4 +1,6 @@
-import { NavLink } from 'react-router-dom'
+import { useDeconnexion, useUtilisateurCourant } from '@/features/auth'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { formatMoisAnnee } from '../utils/format'
 
 const liens = [
   { to: '/commandes', label: 'Mes commandes' },
@@ -7,14 +9,23 @@ const liens = [
   { to: '/compte', label: 'Profil' },
 ]
 
-// TODO: read the signed-in customer once authentication exists
-const CLIENT = { nom: 'Julie Martin', depuis: 'juin 2026' }
-
 export function CompteSidebar() {
+  const { data: utilisateur } = useUtilisateurCourant()
+  const deconnexion = useDeconnexion()
+  const navigate = useNavigate()
+
   return (
     <aside className="md:w-48 md:shrink-0">
-      <p className="font-display text-xl font-semibold">{CLIENT.nom}</p>
-      <p className="mt-0.5 text-xs text-stone-500">Cliente depuis {CLIENT.depuis}</p>
+      {utilisateur && (
+        <>
+          <p className="font-display text-xl font-semibold">
+            {utilisateur.prenom} {utilisateur.nom}
+          </p>
+          <p className="mt-0.5 text-xs text-stone-500">
+            Membre depuis {formatMoisAnnee(utilisateur.dateCreation)}
+          </p>
+        </>
+      )}
 
       <nav aria-label="Mon compte" className="mt-5">
         <ul className="flex flex-col gap-1 text-sm">
@@ -33,11 +44,21 @@ export function CompteSidebar() {
             </li>
           ))}
           <li>
-            {/* TODO: sign out once authentication exists */}
             <button
               type="button"
-              className="text-brique w-full rounded-lg px-3 py-2.5 text-left hover:bg-stone-200/60"
+              className="text-brique w-full rounded-lg px-3 py-2.5 text-left hover:bg-stone-200/60 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={deconnexion.isPending}
+              onClick={() => {
+                deconnexion.mutate(undefined, {
+                  onSuccess: () => {
+                    navigate('/catalogue', { replace: true })
+                  },
+                })
+              }}
             >
+              {deconnexion.isPending && (
+                <span className="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent"></span>
+              )}
               Se déconnecter
             </button>
           </li>

@@ -15,3 +15,14 @@ const dateFormat = new Intl.DateTimeFormat('fr-CA', {
 export function formatDate(iso: string) {
   return dateFormat.format(new Date(iso))
 }
+
+const moisAnneeFormat = new Intl.DateTimeFormat('fr-CA', {
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+})
+
+/** Formats an ISO date (`2026-09-26`) as `septembre 2026`. */
+export function formatMoisAnnee(iso: string) {
+  return moisAnneeFormat.format(new Date(iso))
+}

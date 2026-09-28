@@ -1,3 +1,4 @@
+import { useUtilisateurCourant } from '@/features/auth'
 import { Link, NavLink, useMatch } from 'react-router-dom'
 
 const links = [
@@ -13,6 +14,7 @@ interface NavbarProps {
 
 export function Navbar({ cartItemCount = 0 }: NavbarProps) {
   const isCatalogue = useMatch('/catalogue/*') !== null
+  const { data: utilisateur } = useUtilisateurCourant()
 
   return (
     <header className="bg-creme border-b border-stone-200 px-4">
@@ -52,7 +54,14 @@ export function Navbar({ cartItemCount = 0 }: NavbarProps) {
           )}
 
           <div className="flex items-center gap-6">
-            <Link to="/compte" aria-label="Mon compte" className="text-encre hover:text-brique">
+            <Link
+              to={utilisateur ? '/compte' : '/connexion'}
+              aria-label={utilisateur ? 'Mon compte' : 'Se connecter'}
+              className="text-encre hover:text-brique flex items-center gap-2"
+            >
+              {utilisateur && (
+                <span className="hidden text-sm lg:inline">Bonjour, {utilisateur.prenom}</span>
+              )}
               <UserIcon />
             </Link>
             <Link

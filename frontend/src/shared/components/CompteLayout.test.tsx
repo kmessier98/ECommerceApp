@@ -1,8 +1,27 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { renderWithProviders } from '@/test/render'
 import { CompteLayout } from './CompteLayout'
 import { PageAVenir } from './PageAVenir'
+
+const UTILISATEUR = {
+  id: 1,
+  prenom: 'Julie',
+  nom: 'Martin',
+  courriel: 'julie@test.com',
+  dateCreation: '2026-06-15T00:00:00Z',
+}
+
+// CompteSidebar asks GET /api/auth/moi who is signed in: answer with a signed-in user.
+beforeEach(() => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockImplementation(() => Promise.resolve(new Response(JSON.stringify(UTILISATEUR)))),
+  )
+})
+
+afterEach(() => vi.unstubAllGlobals())
 
 function renderAt(url: string) {
   const router = createMemoryRouter(
@@ -18,7 +37,7 @@ function renderAt(url: string) {
     ],
     { initialEntries: [url] },
   )
-  render(<RouterProvider router={router} />)
+  renderWithProviders(<RouterProvider router={router} />)
 }
 
 describe('CompteLayout', () => {
@@ -33,5 +52,11 @@ describe('CompteLayout', () => {
       .filter((lien) => lien.getAttribute('aria-current') === 'page')
     expect(actifs.map((lien) => lien.textContent)).toEqual([onglet])
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(onglet)
+  })
+
+  it('shows the signed-in user in the sidebar', async () => {
+    renderAt('/compte')
+    expect(await screen.findByText('Julie Martin')).toBeInTheDocument()
+    expect(screen.getByText('Membre depuis juin 2026')).toBeInTheDocument()
   })
 })

@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { ConnexionPage, CreerComptePage } from '@/features/auth'
+import { ConnexionPage, CreerComptePage, RequireAuth } from '@/features/auth'
 import { CataloguePage } from '@/features/catalogue'
 import { CommandesPage, ConfirmationPage } from '@/features/commandes'
 import { PanierPage } from '@/features/panier'
@@ -22,13 +22,18 @@ export const router = createBrowserRouter([
       // Landing page after checkout, once the payment webhook has confirmed the order.
       { path: 'commandes/:numero/confirmation', element: <ConfirmationPage /> },
       {
-        element: <CompteLayout />,
+        element: <RequireAuth />,
         children: [
-          { path: 'commandes', element: <CommandesPage /> },
-          // TODO: replace the placeholders once these tabs have mockups
-          { path: 'compte', element: <PageAVenir titre="Profil" /> },
-          { path: 'compte/adresses', element: <PageAVenir titre="Adresses" /> },
-          { path: 'compte/paiement', element: <PageAVenir titre="Moyens de paiement" /> },
+          {
+            element: <CompteLayout />,
+            children: [
+              { path: 'commandes', element: <CommandesPage /> },
+              // TODO: replace the placeholders once these tabs have mockups
+              { path: 'compte', element: <PageAVenir titre="Profil" /> },
+              { path: 'compte/adresses', element: <PageAVenir titre="Adresses" /> },
+              { path: 'compte/paiement', element: <PageAVenir titre="Moyens de paiement" /> },
+            ],
+          },
         ],
       },
       { path: 'tests', element: <TestsPage /> },

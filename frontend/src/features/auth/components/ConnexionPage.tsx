@@ -1,9 +1,10 @@
-import { useState, type SubmitEvent } from 'react'
+import { useState, type ChangeEvent, type SubmitEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { AuthLayout, CLASSES_CHAMP } from './AuthLayout'
 import { useConnexion } from '../api'
 import { destinationSure } from '../redirection'
 import { messagesErreur } from '@/lib/api-client'
+import { BandeauErreur } from './BandeauErreur'
 
 const TUILES = ['bg-[#d8c8b5]', 'bg-[#e3b874]', 'bg-[#bfc9b1]', 'bg-[#d6b8ab]']
 
@@ -30,14 +31,11 @@ export function ConnexionPage() {
     )
   }
 
-  function onCourrielChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setCourriel(e.target.value)
-    connexion.reset()
-  }
-
-  function onMotDePasseChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setMotDePasse(e.target.value)
-    connexion.reset()
+  function modifier(setter: (valeur: string) => void) {
+    return (e: ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value)
+      if (connexion.isError) connexion.reset()
+    }
   }
 
   return (
@@ -91,7 +89,7 @@ export function ConnexionPage() {
             autoComplete="email"
             required
             value={courriel}
-            onChange={onCourrielChange}
+            onChange={modifier(setCourriel)}
             className={CLASSES_CHAMP}
           />
         </div>
@@ -112,7 +110,7 @@ export function ConnexionPage() {
               autoComplete="current-password"
               required
               value={motDePasse}
-              onChange={onMotDePasseChange}
+              onChange={modifier(setMotDePasse)}
               className="w-full bg-transparent px-3 py-2.5 text-sm focus:outline-none"
             />
             <button
@@ -136,19 +134,7 @@ export function ConnexionPage() {
           Rester connecté
         </label>
 
-        {messagesErreurConnexion.length > 0 && (
-          <div
-            role="alert"
-            className="flex gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-xs text-red-800"
-          >
-            <ErreurIcon />
-            <ul className="flex flex-col gap-1">
-              {messagesErreurConnexion.map((error) => (
-                <li key={error}>{error}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <BandeauErreur messages={messagesErreurConnexion} />
 
         <button
           type="submit"
@@ -188,23 +174,6 @@ function InfoIcon() {
     >
       <circle cx="12" cy="12" r="9" />
       <path d="M12 11v5M12 8h.01" />
-    </svg>
-  )
-}
-
-function ErreurIcon() {
-  return (
-    <svg
-      className="mt-0.5 size-3.5 shrink-0"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v6M12 16.5h.01" />
     </svg>
   )
 }

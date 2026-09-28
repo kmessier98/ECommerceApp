@@ -1,6 +1,10 @@
-import { useState, type ReactNode, type SubmitEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, type ChangeEvent, type ReactNode, type SubmitEvent } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { AuthLayout, CLASSES_CHAMP } from './AuthLayout'
+import { useInscription } from '../api'
+import { destinationSure } from '../redirection'
+import { messagesErreur } from '@/lib/api-client'
+import { BandeauErreur } from './BandeauErreur'
 
 const REGLES_MOT_DE_PASSE: { libelle: string; test: (motDePasse: string) => boolean }[] = [
   { libelle: '8 caractères minimum', test: (m) => m.length >= 8 },
@@ -22,13 +26,33 @@ export function CreerComptePage() {
   const [motDePasse, setMotDePasse] = useState('')
   const [accepteConditions, setAccepteConditions] = useState(false)
   const [infolettre, setInfolettre] = useState(false)
+  const inscription = useInscription()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const messagesErreurInscription = messagesErreur(inscription.error)
 
   const reglesRespectees = REGLES_MOT_DE_PASSE.map((regle) => regle.test(motDePasse))
   const force = reglesRespectees.filter(Boolean).length
 
   function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
-    // TODO: call the sign-up endpoint once the backend exposes one
+
+    const destination = destinationSure(searchParams.get('retour'))
+    inscription.mutate(
+      { prenom, nom, courriel, motDePasse, accepteConditions, infolettre },
+      {
+        onSuccess: () => {
+          navigate(destination, { replace: true })
+        },
+      },
+    )
+  }
+
+  function modifier(setter: (valeur: string) => void) {
+    return (e: ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value)
+      if (inscription.isError) inscription.reset()
+    }
   }
 
   return (
@@ -71,7 +95,7 @@ export function CreerComptePage() {
               autoComplete="given-name"
               required
               value={prenom}
-              onChange={(e) => setPrenom(e.target.value)}
+              onChange={modifier(setPrenom)}
               className={CLASSES_CHAMP}
             />
           </Champ>
@@ -81,7 +105,7 @@ export function CreerComptePage() {
               autoComplete="family-name"
               required
               value={nom}
-              onChange={(e) => setNom(e.target.value)}
+              onChange={modifier(setNom)}
               className={CLASSES_CHAMP}
             />
           </Champ>
@@ -94,7 +118,7 @@ export function CreerComptePage() {
             autoComplete="email"
             required
             value={courriel}
-            onChange={(e) => setCourriel(e.target.value)}
+            onChange={modifier(setCourriel)}
             className={CLASSES_CHAMP}
           />
         </Champ>
@@ -106,7 +130,7 @@ export function CreerComptePage() {
             autoComplete="new-password"
             required
             value={motDePasse}
-            onChange={(e) => setMotDePasse(e.target.value)}
+            onChange={modifier(setMotDePasse)}
             aria-describedby="regles-mot-de-passe"
             className={CLASSES_CHAMP}
           />
@@ -163,11 +187,14 @@ export function CreerComptePage() {
           </label>
         </div>
 
+        <BandeauErreur messages={messagesErreurInscription} />
+
         <button
           type="submit"
-          className="bg-brique rounded-full py-3 text-sm font-semibold text-white transition hover:brightness-110"
+          className="bg-brique rounded-full py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={inscription.isPending}
         >
-          Créer mon compte et continuer
+          {inscription.isPending ? 'Création en cours…' : 'Créer mon compte et continuer'}
         </button>
       </form>
     </AuthLayout>

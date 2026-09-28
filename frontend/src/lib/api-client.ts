@@ -55,3 +55,10 @@ export const apiClient = {
     request<T>(path, { method: 'PUT', body: JSON.stringify(body) }),
   delete: <T = void>(path: string) => request<T>(path, { method: 'DELETE' }),
 }
+
+export function messagesErreur(error: Error | null): string[] {
+  if (!error) return []
+  if (error instanceof ApiError) return error.errors
+
+  return ['Impossible de joindre le serveur. Réessayez.']
+}

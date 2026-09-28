@@ -18,22 +18,22 @@ npm run dev   # http://localhost:5173
 
 Copiez `.env.example` vers `.env` si besoin :
 
-| Variable | Rôle |
-| --- | --- |
-| `VITE_API_BASE_URL` | Préfixe des appels API. Laissez vide en dev pour passer par le proxy Vite. |
-| `API_PROXY_TARGET` | Cible du proxy `/api` (par défaut `https://localhost:7203`, certificat auto-signé accepté). |
+| Variable            | Rôle                                                                                        |
+| ------------------- | ------------------------------------------------------------------------------------------- |
+| `VITE_API_BASE_URL` | Préfixe des appels API. Laissez vide en dev pour passer par le proxy Vite.                  |
+| `API_PROXY_TARGET`  | Cible du proxy `/api` (par défaut `https://localhost:7203`, certificat auto-signé accepté). |
 
 ## Scripts
 
-| Commande | Rôle |
-| --- | --- |
-| `npm run dev` | Serveur de développement |
-| `npm run build` | Vérification TypeScript puis build de production dans `dist/` |
-| `npm run preview` | Servir le build de production |
-| `npm run typecheck` | Vérification TypeScript seule |
-| `npm run lint` | Oxlint |
-| `npm run format` / `npm run format:check` | Prettier (avec tri des classes Tailwind) |
-| `npm test` / `npm run test:run` | Vitest, en mode watch ou en exécution unique |
+| Commande                                  | Rôle                                                          |
+| ----------------------------------------- | ------------------------------------------------------------- |
+| `npm run dev`                             | Serveur de développement                                      |
+| `npm run build`                           | Vérification TypeScript puis build de production dans `dist/` |
+| `npm run preview`                         | Servir le build de production                                 |
+| `npm run typecheck`                       | Vérification TypeScript seule                                 |
+| `npm run lint`                            | Oxlint                                                        |
+| `npm run format` / `npm run format:check` | Prettier (avec tri des classes Tailwind)                      |
+| `npm test` / `npm run test:run`           | Vitest, en mode watch ou en exécution unique                  |
 
 Pour lancer un seul fichier de test : `npx vitest run src/lib/api-client.test.ts`.
 
@@ -59,14 +59,14 @@ Le catalogue, le panier et les commandes utilisent pour l'instant des données f
 
 ## Pages
 
-| Route | Page | Connexion requise |
-| --- | --- | --- |
-| `/connexion`, `/inscription` | Connexion, création de compte | |
-| `/catalogue` | Catalogue | |
-| `/panier` | Panier | |
-| `/commandes` | Mes commandes | 🔒 |
-| `/commandes/:numero/confirmation` | Confirmation de commande | |
-| `/compte`, `/compte/adresses`, `/compte/paiement` | Espace compte (contenu à venir) | 🔒 |
+| Route                                             | Page                            | Connexion requise |
+| ------------------------------------------------- | ------------------------------- | ----------------- |
+| `/connexion`, `/inscription`                      | Connexion, création de compte   |                   |
+| `/catalogue`                                      | Catalogue                       |                   |
+| `/panier`                                         | Panier                          |                   |
+| `/commandes`                                      | Mes commandes                   | 🔒                |
+| `/commandes/:numero/confirmation`                 | Confirmation de commande        |                   |
+| `/compte`, `/compte/adresses`, `/compte/paiement` | Espace compte (contenu à venir) | 🔒                |
 
 Les maquettes sont dans `../docs/maquettes/`.
 

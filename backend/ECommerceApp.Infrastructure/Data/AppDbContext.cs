@@ -8,6 +8,7 @@ namespace ECommerceApp.Infrastructure.Data
     public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityUserContext<Utilisateur, int>(options)
     {
         public DbSet<Test> Tests { get; set; }
+        public DbSet<Categorie> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +37,14 @@ namespace ECommerceApp.Infrastructure.Data
             modelBuilder.Entity<Test>().HasData(
                 new Test { Id = 1, Nom = "Exemple 1" },
                 new Test { Id = 2, Nom = "Exemple 2" }
+            );
+
+            // --- Categories ---
+            modelBuilder.Entity<Categorie>().HasData(
+                new Categorie { Id = 1, Nom = "Maison" },
+                new Categorie { Id = 2, Nom = "Cuisine" },
+                new Categorie { Id = 3, Nom = "Épicerie" },
+                new Categorie { Id = 4, Nom = "Accessoires" }
             );
         }
     }

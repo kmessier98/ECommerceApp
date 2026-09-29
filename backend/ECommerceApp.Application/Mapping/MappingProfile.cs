@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using ECommerceApp.Domain.Entities;
 using ECommerceApp.Application.DTOs;
+using ECommerceApp.Domain.Entities;
 
 namespace ECommerceApp.Application.Mapping
 {
@@ -13,6 +13,7 @@ namespace ECommerceApp.Application.Mapping
             CreateMap<UpdateTestDto, Test>();
             CreateMap<Utilisateur, UtilisateurDto>()
                 .ForMember(dest => dest.Courriel, opt => opt.MapFrom(src => src.Email));
+            CreateMap<Categorie, CategorieDto>();
         }
     }
 }

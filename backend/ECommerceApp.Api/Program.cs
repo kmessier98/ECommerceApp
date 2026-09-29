@@ -1,16 +1,16 @@
-﻿using FluentValidation;
-using ECommerceApp.Api.Middlewares;
+﻿using ECommerceApp.Api.Middlewares;
 using ECommerceApp.Application.Interfaces;
 using ECommerceApp.Application.Mapping;
 using ECommerceApp.Application.Services;
 using ECommerceApp.Application.Validators;
+using ECommerceApp.Domain.Entities;
 using ECommerceApp.Infrastructure.Data;
+using ECommerceApp.Infrastructure.Identity;
 using ECommerceApp.Infrastructure.Repositories;
+using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using ECommerceApp.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
-using ECommerceApp.Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +39,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 builder.Services.AddScoped<ITestService, TestService>();
 builder.Services.AddScoped<ITestRepository, TestRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICategorieRepository, CategorieRepository>();
+builder.Services.AddScoped<ICategorieService, CategorieService>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(CreateTestDtoValidator).Assembly);
 

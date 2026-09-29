@@ -4,6 +4,7 @@ using ECommerceApp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceApp.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260929194323_AddCategorieEntity")]
+    partial class AddCategorieEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,28 +40,6 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categorie");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Nom = "Maison"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Nom = "Cuisine"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Nom = "Épicerie"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Nom = "Accessoires"
-                        });
                 });
 
             modelBuilder.Entity("ECommerceApp.Domain.Entities.Test", b =>

@@ -18,7 +18,7 @@ export function ProduitCard({ produit }: { produit: Produit }) {
         </span>
       </div>
 
-      <p className="mt-2.5 text-xs text-stone-500">{produit.categorie}</p>
+      <p className="mt-2.5 text-xs text-stone-500">{produit.categorie.nom}</p>
       <h3 className="text-sm font-semibold">{produit.nom}</h3>
 
       <div className="mt-auto flex items-center justify-between gap-2 pt-2">

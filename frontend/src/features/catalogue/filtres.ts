@@ -1,7 +1,5 @@
 import type { Categorie, Produit, Tri } from './types'
 
-export const CATEGORIES: Categorie[] = ['Maison', 'Cuisine', 'Épicerie', 'Accessoires']
-
 export interface Filtres {
   categorie: Categorie | null
   prixMin: number
@@ -29,7 +27,7 @@ export function appliquerFiltres(produits: Produit[], f: Filtres, tri: Tri) {
   return produits
     .filter(
       (p) =>
-        (!f.categorie || p.categorie === f.categorie) &&
+        (!f.categorie?.id || p.categorie.id === f.categorie.id) &&
         p.prix >= f.prixMin &&
         p.prix <= f.prixMax &&
         (!f.enStockSeulement || p.enStock) &&

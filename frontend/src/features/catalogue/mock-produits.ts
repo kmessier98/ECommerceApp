@@ -5,7 +5,7 @@ export const mockProduits: Produit[] = [
   {
     id: 1,
     nom: 'Tuque en laine mérinos',
-    categorie: 'Accessoires',
+    categorie: { id: 4, nom: 'Accessoire' },
     prix: 38,
     enStock: true,
     enPromotion: false,
@@ -17,7 +17,7 @@ export const mockProduits: Produit[] = [
   {
     id: 2,
     nom: 'Tasse en grès émaillé',
-    categorie: 'Maison',
+    categorie: { id: 1, nom: 'Maison' },
     prix: 32,
     enStock: true,
     enPromotion: true,
@@ -28,7 +28,7 @@ export const mockProduits: Produit[] = [
   {
     id: 3,
     nom: 'Bougie sapin baumier',
-    categorie: 'Maison',
+    categorie: { id: 1, nom: 'Maison' },
     prix: 28,
     enStock: true,
     enPromotion: false,
@@ -39,7 +39,7 @@ export const mockProduits: Produit[] = [
   {
     id: 4,
     nom: 'Sirop d’érable ambré 540 ml',
-    categorie: 'Épicerie',
+    categorie: { id: 3, nom: 'Épicerie' },
     prix: 16.5,
     enStock: true,
     enPromotion: false,
@@ -51,7 +51,7 @@ export const mockProduits: Produit[] = [
   {
     id: 5,
     nom: 'Jeté en laine tissé',
-    categorie: 'Maison',
+    categorie: { id: 1, nom: 'Maison' },
     prix: 145,
     enStock: true,
     enPromotion: false,
@@ -63,7 +63,7 @@ export const mockProduits: Produit[] = [
   {
     id: 6,
     nom: 'Planche à découper en érable',
-    categorie: 'Cuisine',
+    categorie: { id: 2, nom: 'Cuisine' },
     prix: 64,
     enStock: true,
     enPromotion: true,
@@ -74,7 +74,7 @@ export const mockProduits: Produit[] = [
   {
     id: 7,
     nom: 'Chaussettes de laine',
-    categorie: 'Accessoires',
+    categorie: { id: 4, nom: 'Accessoire' },
     prix: 24,
     enStock: false,
     enPromotion: false,
@@ -86,7 +86,7 @@ export const mockProduits: Produit[] = [
   {
     id: 8,
     nom: 'Beurre d’érable 250 g',
-    categorie: 'Épicerie',
+    categorie: { id: 3, nom: 'Épicerie' },
     prix: 11,
     enStock: true,
     enPromotion: false,

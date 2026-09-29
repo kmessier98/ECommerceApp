@@ -1,5 +1,8 @@
 // No Produit entity exists on the backend yet: keep this in sync with the future ProduitDto.
-export type Categorie = 'Maison' | 'Cuisine' | 'Épicerie' | 'Accessoires'
+export interface Categorie {
+  id: number
+  nom: string
+}
 
 export type Badge = 'Nouveau' | 'Populaire' | 'Stock limité' | 'Rupture'
 

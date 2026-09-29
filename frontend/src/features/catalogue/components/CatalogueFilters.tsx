@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
-import { CATEGORIES, FILTRES_PAR_DEFAUT, type Filtres } from '../filtres'
+import { FILTRES_PAR_DEFAUT, type Filtres } from '../filtres'
 import type { Categorie, Produit } from '../types'
+import { useCategories } from '../api'
 
 interface CatalogueFiltersProps {
   produits: Produit[]
@@ -11,16 +12,17 @@ interface CatalogueFiltersProps {
 export function CatalogueFilters({ produits, filtres, onChange }: CatalogueFiltersProps) {
   const set = (partial: Partial<Filtres>) => onChange({ ...filtres, ...partial })
   const count = (categorie: Categorie | null) =>
-    categorie ? produits.filter((p) => p.categorie === categorie).length : produits.length
+    categorie ? produits.filter((p) => p.categorie.id === categorie.id).length : produits.length
+  const { data: categories = [], } = useCategories();
 
   return (
     <aside className="w-full shrink-0 space-y-6 md:w-48">
       <Section titre="Catégories">
         <ul className="space-y-1">
-          {[null, ...CATEGORIES].map((categorie) => {
-            const actif = filtres.categorie === categorie
+          {[null, ...categories].map((categorie) => {
+            const actif = filtres.categorie?.id === categorie?.id
             return (
-              <li key={categorie ?? 'tout'}>
+              <li key={categorie?.id ?? 'tout'}>
                 <button
                   type="button"
                   aria-pressed={actif}
@@ -29,7 +31,7 @@ export function CatalogueFilters({ produits, filtres, onChange }: CatalogueFilte
                     actif ? 'bg-encre font-semibold text-white' : 'hover:bg-stone-200/60'
                   }`}
                 >
-                  {categorie ?? 'Tout'}
+                  {categorie?.nom ?? 'Tout'}
                   <span className={`text-xs ${actif ? 'text-stone-300' : 'text-stone-500'}`}>
                     {count(categorie)}
                   </span>

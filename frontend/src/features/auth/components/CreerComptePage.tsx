@@ -2,6 +2,7 @@ import { useState, type ChangeEvent, type ReactNode, type SubmitEvent } from 're
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { AuthLayout, CLASSES_CHAMP } from './AuthLayout'
 import { useInscription } from '../api'
+import { motDePasseValide } from '../mot-de-passe'
 import { destinationSure } from '../redirection'
 import { messagesErreur } from '@/lib/api-client'
 import { BandeauErreur } from './BandeauErreur'
@@ -165,7 +166,7 @@ export function CreerComptePage() {
         <button
           type="submit"
           className="bg-brique rounded-full py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
-          disabled={inscription.isPending}
+          disabled={inscription.isPending || !motDePasseValide(motDePasse)}
         >
           {inscription.isPending ? 'Création en cours…' : 'Créer mon compte et continuer'}
         </button>

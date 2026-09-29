@@ -27,4 +27,22 @@ describe('CreerComptePage', () => {
       'Un chiffre',
     ])
   })
+
+  it('enables the submit button only once every password rule is met', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <MemoryRouter>
+        <CreerComptePage />
+      </MemoryRouter>,
+    )
+
+    const bouton = screen.getByRole('button', { name: 'Créer mon compte et continuer' })
+    expect(bouton).toBeDisabled()
+
+    await user.type(screen.getByLabelText('Mot de passe'), 'Motdepasse1')
+    expect(bouton).toBeDisabled()
+
+    await user.type(screen.getByLabelText('Mot de passe'), '!')
+    expect(bouton).toBeEnabled()
+  })
 })

@@ -34,7 +34,7 @@ Accounts use ASP.NET Core Identity with an HttpOnly auth cookie (`EcommerceApp.A
 
 - **Protecting an endpoint (the real security):** add `[Authorize]` to the controller or action. Unauthenticated calls get a 401 in the usual `{ "errors": [...] }` shape (from the cookie's `OnRedirectToLogin` event in `Program.cs`, not from the middleware).
 - **Protecting a page (UX only):** nest its routes under `<RequireAuth />` in `src/app/router.tsx`. Signed-out visitors are sent to `/connexion?retour=<page>` and brought back after logging in. The account pages (`CompteLayout`: `/commandes`, `/compte/*`) are protected this way.
-- **Password rules** are defined three times and must stay identical: `InscriptionDtoValidator` (backend), the Identity password options in `Program.cs`, and `REGLES_MOT_DE_PASSE` in `CreerComptePage.tsx` (8+ characters, an uppercase letter, a digit, a non-alphanumeric character; no lowercase rule).
+- **Password rules** are defined three times and must stay identical: `InscriptionDtoValidator` (backend), the Identity password options in `Program.cs`, and `REGLES_MOT_DE_PASSE` in `frontend/src/features/auth/mot-de-passe.ts` (8+ characters, an uppercase letter, a digit, a non-alphanumeric character; no lowercase rule).
 
 ## Conventions
 

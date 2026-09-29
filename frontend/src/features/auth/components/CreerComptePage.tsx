@@ -5,13 +5,7 @@ import { useInscription } from '../api'
 import { destinationSure } from '../redirection'
 import { messagesErreur } from '@/lib/api-client'
 import { BandeauErreur } from './BandeauErreur'
-
-const REGLES_MOT_DE_PASSE: { libelle: string; test: (motDePasse: string) => boolean }[] = [
-  { libelle: '8 caractères minimum', test: (m) => m.length >= 8 },
-  { libelle: 'Une majuscule', test: (m) => /[A-Z]/.test(m) },
-  { libelle: 'Un chiffre', test: (m) => /\d/.test(m) },
-  { libelle: 'Un caractère spécial', test: (m) => /[^A-Za-z0-9]/.test(m) },
-]
+import { ForceMotDePasse } from './ForceMotDePasse'
 
 const AVANTAGES: { icone: ReactNode; texte: string }[] = [
   { icone: <BoxIcon />, texte: 'Suivez vos commandes en temps réel' },
@@ -30,9 +24,6 @@ export function CreerComptePage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const messagesErreurInscription = messagesErreur(inscription.error)
-
-  const reglesRespectees = REGLES_MOT_DE_PASSE.map((regle) => regle.test(motDePasse))
-  const force = reglesRespectees.filter(Boolean).length
 
   function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -134,25 +125,7 @@ export function CreerComptePage() {
             aria-describedby="regles-mot-de-passe"
             className={CLASSES_CHAMP}
           />
-          <div className="mt-2.5 grid grid-cols-4 gap-1" aria-hidden="true">
-            {REGLES_MOT_DE_PASSE.map((regle, i) => (
-              <span
-                key={regle.libelle}
-                className={`h-1 rounded-full ${i < force ? 'bg-[#c98a1e]' : 'bg-stone-200'}`}
-              />
-            ))}
-          </div>
-          <ul id="regles-mot-de-passe" className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-            {REGLES_MOT_DE_PASSE.map((regle, i) => (
-              <li
-                key={regle.libelle}
-                className={`flex items-center gap-1.5 ${reglesRespectees[i] ? 'text-stone-700' : 'text-stone-500'}`}
-              >
-                {reglesRespectees[i] ? <CheckIcon /> : <CircleIcon />}
-                {regle.libelle}
-              </li>
-            ))}
-          </ul>
+          <ForceMotDePasse id="regles-mot-de-passe" motDePasse={motDePasse} />
         </Champ>
 
         <div className="flex flex-col gap-3 text-sm text-stone-700">
@@ -252,22 +225,6 @@ function HomeIcon() {
     <Icone>
       <path d="M3 10.5 12 3l9 7.5V21H3V10.5Z" />
       <path d="M9 21v-6h6v6" />
-    </Icone>
-  )
-}
-
-function CheckIcon() {
-  return (
-    <Icone className="size-3">
-      <path d="m5 12 5 5 9-10" />
-    </Icone>
-  )
-}
-
-function CircleIcon() {
-  return (
-    <Icone className="size-3">
-      <circle cx="12" cy="12" r="7" />
     </Icone>
   )
 }

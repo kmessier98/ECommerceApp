@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { ConnexionPage, CreerComptePage, RequireAuth } from '@/features/auth'
 import { CataloguePage } from '@/features/catalogue'
 import { CommandesPage, ConfirmationPage } from '@/features/commandes'
+import { ProfilPage } from '@/features/compte'
 import { PanierPage } from '@/features/panier'
 import { TestsPage } from '@/features/tests'
 import { CompteLayout } from '@/shared/components/CompteLayout'
@@ -29,7 +30,7 @@ export const router = createBrowserRouter([
             children: [
               { path: 'commandes', element: <CommandesPage /> },
               // TODO: replace the placeholders once these tabs have mockups
-              { path: 'compte', element: <PageAVenir titre="Profil" /> },
+              { path: 'compte', element: <ProfilPage /> },
               { path: 'compte/adresses', element: <PageAVenir titre="Adresses" /> },
               { path: 'compte/paiement', element: <PageAVenir titre="Moyens de paiement" /> },
             ],

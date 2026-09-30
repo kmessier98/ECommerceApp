@@ -17,7 +17,7 @@ export const FILTRES_PAR_DEFAUT: Filtres = {
 }
 
 const comparateurs: Record<Tri, (a: Produit, b: Produit) => number> = {
-  popularite: (a, b) => a.popularite - b.popularite,
+  'rang-popularite': (a, b) => a.rangPopularite - b.rangPopularite,
   'prix-croissant': (a, b) => a.prix - b.prix,
   'prix-decroissant': (a, b) => b.prix - a.prix,
   nouveautes: (a, b) => b.dateAjout.localeCompare(a.dateAjout),

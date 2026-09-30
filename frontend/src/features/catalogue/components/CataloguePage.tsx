@@ -6,7 +6,7 @@ import { CatalogueFilters } from './CatalogueFilters'
 import { ProduitCard } from './ProduitCard'
 
 const TRIS: { value: Tri; label: string }[] = [
-  { value: 'popularite', label: 'Popularité' },
+  { value: 'rang-popularite', label: 'Popularite' },
   { value: 'prix-croissant', label: 'Prix croissant' },
   { value: 'prix-decroissant', label: 'Prix décroissant' },
   { value: 'nouveautes', label: 'Nouveautés' },
@@ -15,7 +15,7 @@ const TRIS: { value: Tri; label: string }[] = [
 export function CataloguePage() {
   const { data: produits = [], isLoading } = useProduits()
   const [filtres, setFiltres] = useState<Filtres>(FILTRES_PAR_DEFAUT)
-  const [tri, setTri] = useState<Tri>('popularite')
+  const [tri, setTri] = useState<Tri>('rang-popularite')
 
   const visibles = useMemo(() => appliquerFiltres(produits, filtres, tri), [produits, filtres, tri])
 

@@ -9,6 +9,7 @@ namespace ECommerceApp.Infrastructure.Data
     {
         public DbSet<Test> Tests { get; set; }
         public DbSet<Categorie> Categories { get; set; }
+        public DbSet<Produit> Produit { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +46,18 @@ namespace ECommerceApp.Infrastructure.Data
                 new Categorie { Id = 2, Nom = "Cuisine" },
                 new Categorie { Id = 3, Nom = "Épicerie" },
                 new Categorie { Id = 4, Nom = "Accessoires" }
+            );
+
+            // --- Produits ---
+            modelBuilder.Entity<Produit>().HasData(
+                new Produit { Id = 1, Nom = "Tuque en laine mérinos", Prix = 38.00m, CategorieId = 4 },
+                new Produit { Id = 2, Nom = "Tasse en grès émaillé", Prix = 32.00m, CategorieId = 1 },
+                new Produit { Id = 3, Nom = "Bougie sapin baumier", Prix = 28.00m, CategorieId = 1 },
+                new Produit { Id = 4, Nom = "Sirop d’érable ambré 540 ml", Prix = 16.50m, CategorieId = 3 },
+                new Produit { Id = 5, Nom = "Jeté en laine tissé", Prix = 145.00m, CategorieId = 1 },
+                new Produit { Id = 6, Nom = "Planche à découper en érable", Prix = 64.00m, CategorieId = 2 },
+                new Produit { Id = 7, Nom = "Chaussettes de laine", Prix = 24.00m, CategorieId = 4 },
+                new Produit { Id = 8, Nom = "Beurre d’érable 250 g", Prix = 11.00m, CategorieId = 3 }
             );
         }
     }

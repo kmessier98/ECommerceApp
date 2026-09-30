@@ -15,10 +15,10 @@ export interface Produit {
   enPromotion: boolean
   badge?: Badge
   /** Lower is more popular. */
-  popularite: number
+  rangPopularite: number
   dateAjout: string
   /** Placeholder background until real product photos exist. */
   couleur: string
 }
 
-export type Tri = 'popularite' | 'prix-croissant' | 'prix-decroissant' | 'nouveautes'
+export type Tri = 'rang-popularite' | 'prix-croissant' | 'prix-decroissant' | 'nouveautes'

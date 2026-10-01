@@ -20,4 +20,9 @@
         public int ProduitId { get; set; }
         public int Quantite { get; set; }
     }
+
+    public class ModifierArticlePanierDto
+    {
+        public int Quantite { get; set; }
+    }
 }

@@ -29,7 +29,7 @@ namespace ECommerceApp.Api.Controllers
         }
 
         [HttpPost("articles")]
-        public async Task<ActionResult> AjouterArticle(AjouterArticlePanierDto dto)
+        public async Task<ActionResult> AjouterArticle([FromBody] AjouterArticlePanierDto dto)
         {
             var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -37,6 +37,18 @@ namespace ECommerceApp.Api.Controllers
                 return Unauthorized(); //TODO permettre plus tard
 
             await _panierService.AjouterArticle(userId, dto);
+            return NoContent();
+        }
+
+        [HttpPatch("articles/{produitId:int}")]
+        public async Task<ActionResult> ModifierArticle([FromRoute] int produitId, [FromBody] ModifierArticlePanierDto dto)
+        {
+            var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(claim, out var userId))
+                return Unauthorized(); //TODO permettre plus tard
+
+            await _panierService.ModifierArticle(userId, produitId, dto);
             return NoContent();
         }
     }

@@ -6,5 +6,6 @@ namespace ECommerceApp.Application.Interfaces
     {
         Task<PanierDto> Get(int userId);
         Task AjouterArticle(int userId, AjouterArticlePanierDto dto);
+        Task ModifierArticle(int userId, int produitId, ModifierArticlePanierDto dto);
     }
 }

@@ -27,5 +27,17 @@ namespace ECommerceApp.Api.Controllers
             var panier = await _panierService.Get(userId);
             return Ok(panier);
         }
+
+        [HttpPost("articles")]
+        public async Task<ActionResult> AjouterArticle(AjouterArticlePanierDto dto)
+        {
+            var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(claim, out var userId))
+                return Unauthorized(); //TODO permettre plus tard
+
+            await _panierService.AjouterArticle(userId, dto);
+            return NoContent();
+        }
     }
 }

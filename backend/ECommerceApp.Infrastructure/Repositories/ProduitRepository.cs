@@ -24,9 +24,11 @@ namespace ECommerceApp.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Produit?> FindByIdAsync(int id)
+        public async Task<Produit?> FindByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Produit
+                .Include(x => x.Categorie)
+                .SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IReadOnlyList<Produit>> GetAllAsync()

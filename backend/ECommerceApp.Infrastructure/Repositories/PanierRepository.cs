@@ -15,9 +15,17 @@ namespace ECommerceApp.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public Task CreateAsync(Panier entity)
+        public async Task CreateAsync(Panier entity)
         {
-            throw new NotImplementedException();
+            await _dbContext.Panier.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
+
+        public async Task UpdateAsync(Panier entity)
+        {
+            _dbContext.Panier.Update(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         public Task DeleteAsync(Panier entity)
@@ -41,11 +49,6 @@ namespace ECommerceApp.Infrastructure.Repositories
                 .Include(a => a.Articles)
                     .ThenInclude(p => p.Produit)
                 .SingleOrDefaultAsync(predicate);
-        }
-
-        public Task UpdateAsync(Panier entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -4,6 +4,7 @@ using ECommerceApp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceApp.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261001183114_AddArticlePanierEntity")]
+    partial class AddArticlePanierEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                     b.Property<int>("ProduitId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantite")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -104,7 +107,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                     b.HasIndex("UtilisateurId")
                         .IsUnique();
 
-                    b.ToTable("Panier");
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("ECommerceApp.Domain.Entities.Produit", b =>

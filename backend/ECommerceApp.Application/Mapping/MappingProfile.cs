@@ -22,6 +22,10 @@ namespace ECommerceApp.Application.Mapping
                .ForMember(dest => dest.RangPopularite, opt => opt.MapFrom(src => CalculerPopularite(src.Id)))
                .ForMember(dest => dest.DateAjout, opt => opt.MapFrom(src => CalculerDateAjout(src.Id)))
                .ForMember(dest => dest.Couleur, opt => opt.MapFrom(src => CalculerCouleur(src.Id)));
+            CreateMap<ArticlePanier, ArticlePanierDto>()
+                .ForMember(dest => dest.NomProduit, opt => opt.MapFrom(src => src.Produit.Nom))
+                .ForMember(dest => dest.Prix, opt => opt.MapFrom(src => src.Produit.Prix));
+            CreateMap<Panier, PanierDto>();
         }
 
         //TODO données fictif pour le moment...

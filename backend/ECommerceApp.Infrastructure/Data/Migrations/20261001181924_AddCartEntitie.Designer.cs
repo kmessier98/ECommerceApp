@@ -4,6 +4,7 @@ using ECommerceApp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceApp.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261001181924_AddCartEntitie")]
+    partial class AddCartEntitie
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ECommerceApp.Domain.Entities.ArticlePanier", b =>
+            modelBuilder.Entity("ECommerceApp.Domain.Entities.Cart", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,23 +33,15 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("PanierId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProduitId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantite")
+                    b.Property<int>("UtilisateurId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProduitId");
-
-                    b.HasIndex("PanierId", "ProduitId")
+                    b.HasIndex("UtilisateurId")
                         .IsUnique();
 
-                    b.ToTable("ArticlePanier");
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("ECommerceApp.Domain.Entities.Categorie", b =>
@@ -86,25 +81,6 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                             Id = 4,
                             Nom = "Accessoires"
                         });
-                });
-
-            modelBuilder.Entity("ECommerceApp.Domain.Entities.Panier", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("UtilisateurId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UtilisateurId")
-                        .IsUnique();
-
-                    b.ToTable("Panier");
                 });
 
             modelBuilder.Entity("ECommerceApp.Domain.Entities.Produit", b =>
@@ -367,26 +343,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ECommerceApp.Domain.Entities.ArticlePanier", b =>
-                {
-                    b.HasOne("ECommerceApp.Domain.Entities.Panier", "Panier")
-                        .WithMany()
-                        .HasForeignKey("PanierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ECommerceApp.Domain.Entities.Produit", "Produit")
-                        .WithMany()
-                        .HasForeignKey("ProduitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Panier");
-
-                    b.Navigation("Produit");
-                });
-
-            modelBuilder.Entity("ECommerceApp.Domain.Entities.Panier", b =>
+            modelBuilder.Entity("ECommerceApp.Domain.Entities.Cart", b =>
                 {
                     b.HasOne("ECommerceApp.Domain.Entities.Utilisateur", "Utilisateur")
                         .WithMany()

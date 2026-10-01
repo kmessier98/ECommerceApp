@@ -46,6 +46,8 @@ builder.Services.AddScoped<ICategorieRepository, CategorieRepository>();
 builder.Services.AddScoped<ICategorieService, CategorieService>();
 builder.Services.AddScoped<IProduitRepository, ProduitRepository>();
 builder.Services.AddScoped<IProduitService, ProduitService>();
+builder.Services.AddScoped<IPanierRepository, PanierRepository>();
+builder.Services.AddScoped<IPanierService, PanierService>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(CreateTestDtoValidator).Assembly);
 

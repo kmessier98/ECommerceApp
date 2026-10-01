@@ -10,6 +10,7 @@ namespace ECommerceApp.Infrastructure.Data
         public DbSet<Test> Tests { get; set; }
         public DbSet<Categorie> Categories { get; set; }
         public DbSet<Produit> Produit { get; set; }
+        public DbSet<Panier> Panier { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,6 +22,14 @@ namespace ECommerceApp.Infrastructure.Data
                 u.Property(p => p.Prenom).HasMaxLength(100);
                 u.Property(n => n.Nom).HasMaxLength(100);
             });
+
+            modelBuilder.Entity<Panier>()
+                .HasIndex(u => u.UtilisateurId)
+                .IsUnique();
+
+            modelBuilder.Entity<ArticlePanier>()
+                .HasIndex(ci => new { ci.PanierId, ci.ProduitId })
+                .IsUnique();
 
             SeedData(modelBuilder);
         }

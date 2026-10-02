@@ -51,5 +51,17 @@ namespace ECommerceApp.Api.Controllers
             await _panierService.ModifierArticle(userId, produitId, dto);
             return NoContent();
         }
+
+        [HttpDelete("articles/{produitId:int}")]
+        public async Task<ActionResult> RetirerArticle([FromRoute] int produitId)
+        {
+            var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(claim, out var userId))
+                return Unauthorized(); //TODO permettre plus tard
+
+            await _panierService.RetirerArticle(userId, produitId);
+            return NoContent();
+        }
     }
 }

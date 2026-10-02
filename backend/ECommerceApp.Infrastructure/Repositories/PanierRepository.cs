@@ -28,9 +28,10 @@ namespace ECommerceApp.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(Panier entity)
+        public async Task DeleteAsync(Panier entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Panier.Remove(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         public Task<Panier?> FindByIdAsync(int id)

@@ -70,5 +70,28 @@ namespace ECommerceApp.Application.Services
 
             return _mapper.Map<PanierDto>(panier);
         }
+
+        public async Task RetirerArticle(int userId, int produitId)
+        {
+            var panier = await _panierRepository.GetByAsync(p => p.UtilisateurId == userId);
+
+            if (panier == null)
+                throw new NotFoundException($"Aucun panier trouvé pour l'utilisateur {userId}.");
+
+            var article = panier.Articles.SingleOrDefault(x => x.ProduitId == produitId);
+            if (article == null)
+                throw new NotFoundException($"Le produit {produitId} n'est pas dans le panier.");
+
+            panier.Articles.Remove(article);
+
+            if (panier.Articles.Count == 0)
+            {
+                await _panierRepository.DeleteAsync(panier);
+            }
+            else
+            {
+                await _panierRepository.UpdateAsync(panier);
+            }
+        }
     }
 }

@@ -37,10 +37,20 @@ namespace ECommerceApp.Application.Services
                 await _panierRepository.CreateAsync(panier);
             }
 
-            panier.Articles.Add(new ArticlePanier { PanierId = panier.Id, ProduitId = dto.ProduitId, Quantite = dto.Quantite });
+            var article = panier.Articles.SingleOrDefault(x => x.ProduitId == dto.ProduitId);
+
+            if (article == null)
+            {
+                panier.Articles.Add(new ArticlePanier { PanierId = panier.Id, ProduitId = dto.ProduitId, Quantite = 1 });
+            }
+            else
+            {
+                article.Quantite += 1;
+            }
 
             await _panierRepository.UpdateAsync(panier);
         }
+
         public async Task ModifierArticle(int userId, int produitId, ModifierArticlePanierDto dto)
         {
             var result = await _modifierArticleValidator.ValidateAsync(dto);

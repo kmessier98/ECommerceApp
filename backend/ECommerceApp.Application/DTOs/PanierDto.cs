@@ -18,7 +18,6 @@
     public class AjouterArticlePanierDto
     {
         public int ProduitId { get; set; }
-        public int Quantite { get; set; }
     }
 
     public class ModifierArticlePanierDto

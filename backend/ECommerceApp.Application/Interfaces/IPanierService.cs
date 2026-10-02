@@ -6,7 +6,7 @@ namespace ECommerceApp.Application.Interfaces
     {
         Task<PanierDto> Get(int userId);
         Task AjouterArticle(int userId, AjouterArticlePanierDto dto);
-        Task ModifierArticle(int userId, int produitId, ModifierArticlePanierDto dto);
-        Task RetirerArticle(int userId, int produitId);
+        Task<PanierDto> ModifierArticle(int userId, int produitId, ModifierArticlePanierDto dto);
+        Task<PanierDto> RetirerArticle(int userId, int produitId);
     }
 }

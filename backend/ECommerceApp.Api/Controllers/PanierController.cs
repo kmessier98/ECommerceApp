@@ -41,27 +41,27 @@ namespace ECommerceApp.Api.Controllers
         }
 
         [HttpPatch("articles/{produitId:int}")]
-        public async Task<ActionResult> ModifierArticle([FromRoute] int produitId, [FromBody] ModifierArticlePanierDto dto)
+        public async Task<ActionResult<PanierDto>> ModifierArticle([FromRoute] int produitId, [FromBody] ModifierArticlePanierDto dto)
         {
             var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!int.TryParse(claim, out var userId))
                 return Unauthorized(); //TODO permettre plus tard
 
-            await _panierService.ModifierArticle(userId, produitId, dto);
-            return NoContent();
+            var panier = await _panierService.ModifierArticle(userId, produitId, dto);
+            return Ok(panier);
         }
 
         [HttpDelete("articles/{produitId:int}")]
-        public async Task<ActionResult> RetirerArticle([FromRoute] int produitId)
+        public async Task<ActionResult<PanierDto>> RetirerArticle([FromRoute] int produitId)
         {
             var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!int.TryParse(claim, out var userId))
                 return Unauthorized(); //TODO permettre plus tard
 
-            await _panierService.RetirerArticle(userId, produitId);
-            return NoContent();
+            var panier = await _panierService.RetirerArticle(userId, produitId);
+            return Ok(panier);
         }
     }
 }

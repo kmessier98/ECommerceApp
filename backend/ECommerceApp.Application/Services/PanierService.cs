@@ -57,7 +57,7 @@ namespace ECommerceApp.Application.Services
             await _panierRepository.UpdateAsync(panier);
         }
 
-        public async Task ModifierArticle(int userId, int produitId, ModifierArticlePanierDto dto)
+        public async Task<PanierDto> ModifierArticle(int userId, int produitId, ModifierArticlePanierDto dto)
         {
             var result = await _modifierArticleValidator.ValidateAsync(dto);
             if (!result.IsValid)
@@ -75,6 +75,8 @@ namespace ECommerceApp.Application.Services
             article.Quantite = dto.Quantite;
 
             await _panierRepository.UpdateAsync(panier);
+
+            return ConstruireDto(panier);
         }
 
         public async Task<PanierDto> Get(int userId)
@@ -87,7 +89,7 @@ namespace ECommerceApp.Application.Services
             return ConstruireDto(panier);
         }
 
-        public async Task RetirerArticle(int userId, int produitId)
+        public async Task<PanierDto> RetirerArticle(int userId, int produitId)
         {
             var panier = await _panierRepository.GetByAsync(p => p.UtilisateurId == userId);
 
@@ -103,11 +105,11 @@ namespace ECommerceApp.Application.Services
             if (panier.Articles.Count == 0)
             {
                 await _panierRepository.DeleteAsync(panier);
+                return new PanierDto();
             }
-            else
-            {
-                await _panierRepository.UpdateAsync(panier);
-            }
+
+            await _panierRepository.UpdateAsync(panier);
+            return ConstruireDto(panier);
         }
 
         private PanierDto ConstruireDto(Panier panier)

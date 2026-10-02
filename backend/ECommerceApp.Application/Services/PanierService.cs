@@ -13,13 +13,19 @@ namespace ECommerceApp.Application.Services
         private readonly IMapper _mapper;
         private readonly IPanierRepository _panierRepository;
         private readonly IProduitRepository _produitRepository;
+        private readonly ICalculPanierService _calculPanierService;
 
-        public PanierService(IValidator<ModifierArticlePanierDto> modifierArticleValidator, IMapper mapper, IPanierRepository panierRepository, IProduitRepository produitRepository)
+        public PanierService(IValidator<ModifierArticlePanierDto> modifierArticleValidator,
+                            IMapper mapper,
+                            IPanierRepository panierRepository,
+                            IProduitRepository produitRepository,
+                            ICalculPanierService calculPanierService)
         {
             _modifierArticleValidator = modifierArticleValidator;
             _mapper = mapper;
             _panierRepository = panierRepository;
             _produitRepository = produitRepository;
+            _calculPanierService = calculPanierService;
         }
 
         public async Task AjouterArticle(int userId, AjouterArticlePanierDto dto)
@@ -78,7 +84,7 @@ namespace ECommerceApp.Application.Services
             if (panier == null)
                 return new PanierDto();
 
-            return _mapper.Map<PanierDto>(panier);
+            return ConstruireDto(panier);
         }
 
         public async Task RetirerArticle(int userId, int produitId)
@@ -102,6 +108,13 @@ namespace ECommerceApp.Application.Services
             {
                 await _panierRepository.UpdateAsync(panier);
             }
+        }
+
+        private PanierDto ConstruireDto(Panier panier)
+        {
+            var dto = _mapper.Map<PanierDto>(panier);
+            dto.ResumePanier = _calculPanierService.Calculer(panier);
+            return dto;
         }
     }
 }

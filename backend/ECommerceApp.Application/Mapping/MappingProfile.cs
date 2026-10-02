@@ -25,7 +25,8 @@ namespace ECommerceApp.Application.Mapping
             CreateMap<ArticlePanier, ArticlePanierDto>()
                 .ForMember(dest => dest.NomProduit, opt => opt.MapFrom(src => src.Produit.Nom))
                 .ForMember(dest => dest.Prix, opt => opt.MapFrom(src => src.Produit.Prix));
-            CreateMap<Panier, PanierDto>();
+            CreateMap<Panier, PanierDto>()
+                .ForMember(dest => dest.ResumePanier, opt => opt.Ignore());
         }
 
         //TODO données fictif pour le moment...

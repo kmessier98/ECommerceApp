@@ -30,7 +30,6 @@ namespace ECommerceApp.Application.Services
                 MontantPourLivraisonGratuite = Math.Max(0, SeulLivraisonGratuite - sousTotal),
                 NombreArticles = panier.Articles.Sum(a => a.Quantite)
             };
-
         }
 
         private static decimal Arrondir(decimal v) =>

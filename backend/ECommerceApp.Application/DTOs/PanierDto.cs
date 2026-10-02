@@ -11,9 +11,11 @@
     public class ArticlePanierDto
     {
         public int ProduitId { get; set; }
-        public string NomProduit { get; set; }
+        public string Nom { get; set; }
         public decimal Prix { get; set; }
         public int Quantite { get; set; }
+        public string Description { get; set; } // TODO fictif pour le moment...
+        public string Couleur { get; set; } // TODO fictif pour le moment..
     }
 
     public class AjouterArticlePanierDto

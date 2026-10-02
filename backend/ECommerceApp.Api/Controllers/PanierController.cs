@@ -29,15 +29,15 @@ namespace ECommerceApp.Api.Controllers
         }
 
         [HttpPost("articles")]
-        public async Task<ActionResult> AjouterArticle([FromBody] AjouterArticlePanierDto dto)
+        public async Task<ActionResult<PanierDto>> AjouterArticle([FromBody] AjouterArticlePanierDto dto)
         {
             var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!int.TryParse(claim, out var userId))
                 return Unauthorized(); //TODO permettre plus tard
 
-            await _panierService.AjouterArticle(userId, dto);
-            return NoContent();
+            var panier = await _panierService.AjouterArticle(userId, dto);
+            return Ok(panier);
         }
 
         [HttpPatch("articles/{produitId:int}")]

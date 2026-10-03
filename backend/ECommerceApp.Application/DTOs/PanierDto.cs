@@ -11,7 +11,7 @@
     public class ArticlePanierDto
     {
         public int ProduitId { get; set; }
-        public string NomProduit { get; set; }
+        public string Nom { get; set; }
         public decimal Prix { get; set; }
         public int Quantite { get; set; }
     }
@@ -33,6 +33,7 @@
         public decimal TPS { get; set; }
         public decimal TVQ { get; set; }
         public decimal Total { get; set; }
+        public decimal SeuilLivraisonGratuite { get; set; }
         public decimal MontantPourLivraisonGratuite { get; set; }
         public int NombreArticles { get; set; }
     }

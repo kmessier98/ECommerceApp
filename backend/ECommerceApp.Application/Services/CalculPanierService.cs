@@ -27,6 +27,7 @@ namespace ECommerceApp.Application.Services
                 TPS = tps,
                 TVQ = tvq,
                 Total = prixBase + tps + tvq,
+                SeuilLivraisonGratuite = SeulLivraisonGratuite,
                 MontantPourLivraisonGratuite = Math.Max(0, SeulLivraisonGratuite - sousTotal),
                 NombreArticles = panier.Articles.Sum(a => a.Quantite)
             };

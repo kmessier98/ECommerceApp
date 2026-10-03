@@ -23,7 +23,7 @@ namespace ECommerceApp.Application.Mapping
                .ForMember(dest => dest.DateAjout, opt => opt.MapFrom(src => CalculerDateAjout(src.Id)))
                .ForMember(dest => dest.Couleur, opt => opt.MapFrom(src => CalculerCouleur(src.Id)));
             CreateMap<ArticlePanier, ArticlePanierDto>()
-                .ForMember(dest => dest.NomProduit, opt => opt.MapFrom(src => src.Produit.Nom))
+                .ForMember(dest => dest.Nom, opt => opt.MapFrom(src => src.Produit.Nom))
                 .ForMember(dest => dest.Prix, opt => opt.MapFrom(src => src.Produit.Prix));
             CreateMap<Panier, PanierDto>()
                 .ForMember(dest => dest.ResumePanier, opt => opt.Ignore());

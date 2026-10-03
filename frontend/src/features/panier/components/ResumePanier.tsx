@@ -1,7 +1,7 @@
 import { formatPrix } from '@/shared/utils/format'
-import type { TotauxPanier } from '../totaux'
+import type { ResumePanier } from '../types'
 
-export function ResumePanier({ totaux }: { totaux: TotauxPanier }) {
+export function ResumePanier({ totaux }: { totaux: ResumePanier }) {
   const lignes = [
     { label: 'Sous-total', montant: formatPrix(totaux.sousTotal) },
     {

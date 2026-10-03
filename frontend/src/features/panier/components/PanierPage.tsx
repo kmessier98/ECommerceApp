@@ -1,15 +1,27 @@
 import { Link } from 'react-router-dom'
 import { formatPrix } from '@/shared/utils/format'
-import { useNombreArticles, usePanier } from '../store'
-import { calculerTotaux, SEUIL_LIVRAISON_GRATUITE } from '../totaux'
 import { LignePanierItem } from './LignePanierItem'
+import { usePanier } from '../api'
 import { ResumePanier } from './ResumePanier'
+import { PanierVide } from './PanierVide'
 
 export function PanierPage() {
-  const lignes = usePanier((state) => state.lignes)
-  const nbArticles = useNombreArticles()
-  const totaux = calculerTotaux(lignes)
-  const progression = Math.min(100, (totaux.sousTotal / SEUIL_LIVRAISON_GRATUITE) * 100)
+  const { data, isPending } = usePanier()
+
+  if (isPending) return <p>Chargement...</p>
+  if (!data) return <p>Impossible de charger le panier.</p>
+
+  const { articles, resumePanier } = data
+
+  if (!resumePanier || articles.length === 0) {
+    return <PanierVide />
+  }
+
+  const { nombreArticles, sousTotal, montantPourLivraisonGratuite, seuilLivraisonGratuite } = resumePanier
+  const progression = Math.min(
+    100,
+    Math.max(0, (sousTotal / seuilLivraisonGratuite) * 100),
+  )
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -17,7 +29,7 @@ export function PanierPage() {
         <h1 className="font-display text-4xl font-semibold tracking-tight">
           Votre panier{' '}
           <span className="text-xl font-medium text-stone-500">
-            ({nbArticles} article{nbArticles > 1 ? 's' : ''})
+            ({nombreArticles} article{nombreArticles > 1 ? 's' : ''})
           </span>
         </h1>
         <Link
@@ -28,7 +40,7 @@ export function PanierPage() {
         </Link>
       </header>
 
-      {lignes.length === 0 ? (
+      {articles.length === 0 ? (
         <p className="rounded-2xl border border-stone-200 bg-white p-8 text-center text-sm text-stone-500">
           Votre panier est vide.
         </p>
@@ -37,8 +49,8 @@ export function PanierPage() {
           <div className="flex min-w-0 flex-col gap-3.5">
             <section className="rounded-2xl border border-stone-200 bg-white px-4 py-3.5">
               <p className="text-xs">
-                {totaux.resteAvantLivraisonGratuite > 0
-                  ? `Plus que ${formatPrix(totaux.resteAvantLivraisonGratuite)} pour obtenir la livraison gratuite.`
+                {montantPourLivraisonGratuite > 0
+                  ? `Plus que ${formatPrix(montantPourLivraisonGratuite)} pour obtenir la livraison gratuite.`
                   : 'Vous profitez de la livraison gratuite.'}
               </p>
               <div
@@ -57,13 +69,13 @@ export function PanierPage() {
             </section>
 
             <ul className="divide-y divide-stone-200 rounded-2xl border border-stone-200 bg-white px-5 py-1">
-              {lignes.map((ligne) => (
+              {articles.map((ligne) => (
                 <LignePanierItem key={ligne.produitId} ligne={ligne} />
               ))}
             </ul>
           </div>
 
-          <ResumePanier totaux={totaux} />
+          <ResumePanier totaux={resumePanier} />
         </div>
       )}
     </div>

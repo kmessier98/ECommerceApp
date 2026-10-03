@@ -1,7 +1,22 @@
 import { formatPrix } from '@/shared/utils/format'
 import type { Produit } from '../types'
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useUtilisateurCourant } from '@/features/auth';
 
 export function ProduitCard({ produit }: { produit: Produit }) {
+  const { data: utilisateur } = useUtilisateurCourant()
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleAjouter = () => {
+    // TEMPORAIRE: ajouter au panier exige l'auth pour le moment.
+    if (!utilisateur) {
+      navigate('/connexion', { state: { from: location } });
+      return;
+    }
+    //ajouterAuPanier(produit); 
+  };
+
   return (
     <article className="flex flex-col">
       <div
@@ -27,6 +42,7 @@ export function ProduitCard({ produit }: { produit: Produit }) {
           <button
             type="button"
             className="bg-brique rounded-full px-4 py-2 text-xs font-semibold text-white transition hover:brightness-110"
+            onClick={handleAjouter}
           >
             Ajouter
           </button>

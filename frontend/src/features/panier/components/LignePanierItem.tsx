@@ -1,9 +1,11 @@
 import { formatPrix } from '@/shared/utils/format'
 import type { LignePanier } from '../types'
+import { useModifierArticle } from '../api'
 
 export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
   //const changerQuantite = usePanier((state) => state.changerQuantite)
   //const retirer = usePanier((state) => state.retirer)
+  const { mutate: modifierArticle } = useModifierArticle()
 
   return (
     <li className="grid grid-cols-[5.25rem_1fr] items-center gap-x-4 gap-y-3 py-4 sm:grid-cols-[5.25rem_1fr_auto_6rem]">
@@ -35,7 +37,7 @@ export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
           type="button"
           aria-label="Diminuer la quantité"
           disabled={ligne.quantite <= 1}
-         // onClick={() => changerQuantite(ligne.produitId, ligne.quantite - 1)}
+          onClick={() => modifierArticle({ id: ligne.produitId, quantity: ligne.quantite - 1 })}
           className="flex size-6 items-center justify-center rounded-full hover:bg-stone-100 disabled:opacity-40 disabled:hover:bg-transparent"
         >
           −
@@ -46,7 +48,7 @@ export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
         <button
           type="button"
           aria-label="Augmenter la quantité"
-         // onClick={() => changerQuantite(ligne.produitId, ligne.quantite + 1)}
+          onClick={() => modifierArticle({ id: ligne.produitId, quantity: ligne.quantite + 1 })}
           className="flex size-6 items-center justify-center rounded-full hover:bg-stone-100"
         >
           +

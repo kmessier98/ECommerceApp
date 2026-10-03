@@ -1,10 +1,9 @@
 import { formatPrix } from '@/shared/utils/format'
-import { usePanier } from '../store'
 import type { LignePanier } from '../types'
 
 export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
-  const changerQuantite = usePanier((state) => state.changerQuantite)
-  const retirer = usePanier((state) => state.retirer)
+  //const changerQuantite = usePanier((state) => state.changerQuantite)
+  //const retirer = usePanier((state) => state.retirer)
 
   return (
     <li className="grid grid-cols-[5.25rem_1fr] items-center gap-x-4 gap-y-3 py-4 sm:grid-cols-[5.25rem_1fr_auto_6rem]">
@@ -17,10 +16,10 @@ export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
       <div>
         <h2 className="text-sm font-semibold">{ligne.nom}</h2>
         <p className="mt-0.5 text-xs text-stone-500">{ligne.description}</p>
-        <p className="text-xs text-stone-500">{formatPrix(ligne.prixUnitaire)} / unité</p>
+        <p className="text-xs text-stone-500">{formatPrix(ligne.prix)} / unité</p>
         <button
           type="button"
-          onClick={() => retirer(ligne.produitId)}
+          //onClick={() => retirer(ligne.produitId)}
           className="text-brique mt-3 text-[11px] font-semibold underline underline-offset-2 hover:brightness-125"
         >
           Retirer
@@ -36,7 +35,7 @@ export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
           type="button"
           aria-label="Diminuer la quantité"
           disabled={ligne.quantite <= 1}
-          onClick={() => changerQuantite(ligne.produitId, ligne.quantite - 1)}
+         // onClick={() => changerQuantite(ligne.produitId, ligne.quantite - 1)}
           className="flex size-6 items-center justify-center rounded-full hover:bg-stone-100 disabled:opacity-40 disabled:hover:bg-transparent"
         >
           −
@@ -47,7 +46,7 @@ export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
         <button
           type="button"
           aria-label="Augmenter la quantité"
-          onClick={() => changerQuantite(ligne.produitId, ligne.quantite + 1)}
+         // onClick={() => changerQuantite(ligne.produitId, ligne.quantite + 1)}
           className="flex size-6 items-center justify-center rounded-full hover:bg-stone-100"
         >
           +
@@ -55,7 +54,7 @@ export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
       </div>
 
       <p className="font-display col-start-2 text-lg font-semibold sm:col-start-auto sm:text-right">
-        {formatPrix(ligne.prixUnitaire * ligne.quantite)}
+        {formatPrix(ligne.prix * ligne.quantite)}
       </p>
     </li>
   )

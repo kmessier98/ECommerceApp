@@ -1,11 +1,26 @@
-// No Panier entity exists on the backend yet: keep this in sync with the future PanierDto.
+export interface PanierDto {
+  articles: LignePanier[]
+  resumePanier: ResumePanier | null
+}
+
 export interface LignePanier {
   produitId: number
   nom: string
   /** Variant details shown under the name, e.g. "Couleur : charbon". */
   description: string
-  prixUnitaire: number
+  prix: number
   quantite: number
   /** Placeholder background until real product photos exist. */
   couleur: string
+}
+
+export interface ResumePanier {
+  sousTotal: number
+  livraison: number
+  tps: number
+  tvq: number
+  total: number
+  seuilLivraisonGratuite: number
+  montantPourLivraisonGratuite: number
+  nombreArticles: number
 }

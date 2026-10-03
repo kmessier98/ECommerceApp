@@ -35,6 +35,7 @@
         public decimal TPS { get; set; }
         public decimal TVQ { get; set; }
         public decimal Total { get; set; }
+        public decimal SeuilLivraisonGratuite { get; set; }
         public decimal MontantPourLivraisonGratuite { get; set; }
         public int NombreArticles { get; set; }
     }

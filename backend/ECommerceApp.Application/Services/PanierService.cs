@@ -28,7 +28,7 @@ namespace ECommerceApp.Application.Services
             _calculPanierService = calculPanierService;
         }
 
-        public async Task AjouterArticle(int userId, AjouterArticlePanierDto dto)
+        public async Task<PanierDto> AjouterArticle(int userId, AjouterArticlePanierDto dto)
         {
             var produit = await _produitRepository.FindByIdAsync(dto.ProduitId);
 
@@ -55,6 +55,7 @@ namespace ECommerceApp.Application.Services
             }
 
             await _panierRepository.UpdateAsync(panier);
+            return ConstruireDto(panier);
         }
 
         public async Task<PanierDto> ModifierArticle(int userId, int produitId, ModifierArticlePanierDto dto)

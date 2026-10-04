@@ -1,21 +1,23 @@
 import { formatPrix } from '@/shared/utils/format'
 import type { Produit } from '../types'
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useUtilisateurCourant } from '@/features/auth';
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useUtilisateurCourant } from '@/features/auth'
+import { useAjouterArticle } from '@/features/panier/api'
 
 export function ProduitCard({ produit }: { produit: Produit }) {
   const { data: utilisateur } = useUtilisateurCourant()
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { mutate: ajouterArticle } = useAjouterArticle()
 
   const handleAjouter = () => {
     // TEMPORAIRE: ajouter au panier exige l'auth pour le moment.
     if (!utilisateur) {
-      navigate('/connexion', { state: { from: location } });
-      return;
+      navigate('/connexion', { state: { from: location } })
+      return
     }
-    //ajouterAuPanier(produit); 
-  };
+    ajouterArticle(produit.id)
+  }
 
   return (
     <article className="flex flex-col">
@@ -41,7 +43,7 @@ export function ProduitCard({ produit }: { produit: Produit }) {
         {produit.enStock ? (
           <button
             type="button"
-            className="bg-brique rounded-full px-4 py-2 text-xs font-semibold text-white transition hover:brightness-110"
+            className="bg-brique cursor-pointer rounded-full px-4 py-2 text-xs font-semibold text-white transition hover:brightness-110"
             onClick={handleAjouter}
           >
             Ajouter
@@ -49,7 +51,7 @@ export function ProduitCard({ produit }: { produit: Produit }) {
         ) : (
           <button
             type="button"
-            className="rounded-full border border-stone-300 bg-white px-4 py-2 text-xs font-semibold transition hover:border-stone-500"
+            className="cursor-pointer rounded-full border border-stone-300 bg-white px-4 py-2 text-xs font-semibold transition hover:border-stone-500"
           >
             M’avertir
           </button>

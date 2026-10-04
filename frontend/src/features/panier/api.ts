@@ -17,6 +17,17 @@ export function usePanier() {
   })
 }
 
+export function useAjouterArticle() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: number) =>
+      apiClient.post<PanierDto>(`${ENDPOINT}/articles`, { produitId: id }),
+    onSuccess: (panier) => {
+      queryClient.setQueryData(panierKeys.all, panier)
+    },
+  })
+}
+
 export function useModifierArticle() {
   const queryClient = useQueryClient()
   return useMutation({

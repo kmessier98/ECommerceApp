@@ -38,3 +38,13 @@ export function useModifierArticle() {
     },
   })
 }
+
+export function useRetirerArticle() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: number) => apiClient.delete<PanierDto>(`${ENDPOINT}/articles/${id}`),
+    onSuccess: (panier) => {
+      queryClient.setQueryData(panierKeys.all, panier)
+    },
+  })
+}

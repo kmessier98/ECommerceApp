@@ -1,11 +1,10 @@
 import { formatPrix } from '@/shared/utils/format'
 import type { LignePanier } from '../types'
-import { useModifierArticle } from '../api'
+import { useModifierArticle, useRetirerArticle } from '../api'
 
 export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
-  //const changerQuantite = usePanier((state) => state.changerQuantite)
-  //const retirer = usePanier((state) => state.retirer)
   const { mutate: modifierArticle } = useModifierArticle()
+  const { mutate: retirerArticle } = useRetirerArticle()
 
   return (
     <li className="grid grid-cols-[5.25rem_1fr] items-center gap-x-4 gap-y-3 py-4 sm:grid-cols-[5.25rem_1fr_auto_6rem]">
@@ -21,7 +20,7 @@ export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
         <p className="text-xs text-stone-500">{formatPrix(ligne.prix)} / unité</p>
         <button
           type="button"
-          //onClick={() => retirer(ligne.produitId)}
+          onClick={() => retirerArticle(ligne.produitId)}
           className="text-brique mt-3 text-[11px] font-semibold underline underline-offset-2 hover:brightness-125"
         >
           Retirer

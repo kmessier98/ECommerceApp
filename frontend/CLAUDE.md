@@ -36,16 +36,22 @@ The `@/` alias maps to `src/` (defined in both `vite.config.ts` and `tsconfig.ap
 
 ### Data fetching and errors
 
-All server state goes through TanStack Query hooks in a feature's `api.ts`. Mutations invalidate the feature's root query key on success, unless the response already holds the new value, in which case they write it with `setQueryData` (as the auth mutations do). `zustand` is for client-only state, never server data; it currently holds the cart (`features/panier/store.ts`).
+All server state goes through TanStack Query hooks in a feature's `api.ts`. Mutations invalidate the feature's root query key on success, unless the response already holds the new value, in which case they write it with `setQueryData` (as the auth mutations and the cart mutations do). `staleTime` defaults to 30 s (`lib/query-client.ts`), so a cached value a mutation elsewhere has made wrong keeps showing for up to 30 s unless that mutation invalidates it. `zustand` is installed for client-only state, never server data, but nothing uses it at the moment.
 
 `apiClient` sends every request with `credentials: 'include'`, so the auth cookie also goes along when the API is on another origin (`VITE_API_BASE_URL`). It throws `ApiError` (`status`, `errors: string[]`) for any non-2xx response. It normalizes the backend's `ExceptionHandlingMiddleware` shape `{ "errors": ["..."] }` as well as ASP.NET ProblemDetails validation errors. To display a query or mutation error, use `messagesErreur(error)` from `lib/api-client.ts`: it returns the backend's messages for an `ApiError`, and a generic French message for anything else (e.g. a network failure, whose English `error.message` must not reach the user). The global `QueryClient` does not retry 4xx `ApiError`s.
 
 ### Authentication (`features/auth`)
 
 - `useUtilisateurCourant()` (`GET /api/auth/moi`, `staleTime: Infinity`) is the single source for "who is signed in". Its `data` is `undefined` while loading, `null` for a visitor (the 401 is turned into `null`, not an error), or a `Utilisateur`. Test it for truthiness (`utilisateur ? … : …`), never `!== null`, or the loading state is taken for a signed-in user.
-- `useConnexion` and `useInscription` write the returned user into the cache. `useDeconnexion` calls `queryClient.clear()` (so the previous user's data never shows for the next one), then sets the user to `null`.
+- `useConnexion` and `useInscription` write the returned user into the cache and invalidate the cart query (`panierKeys.all`), because the backend has just merged the anonymous cart into the account. `useDeconnexion` calls `queryClient.clear()` (so the previous user's data never shows for the next one), then sets the user to `null`.
 - `RequireAuth` is a layout route. It renders nothing while `isPending`: without that, a page reload would redirect signed-in users before `/moi` answers. It sends visitors to `/connexion?retour=<encoded path>`. It is only UX; the API's `[Authorize]` is the actual protection.
 - After a login or sign-up, pages go to `destinationSure(searchParams.get('retour'))` (`redirection.ts`). It only accepts internal paths (starting with `/`, not `//` or `/\`) and falls back to `/catalogue`, which prevents open redirects. Navigate with `replace: true` so Back does not return to the form.
+
+### Cart (`features/panier`)
+
+The cart works for signed-out visitors too: `/panier` is not under `RequireAuth`, and adding a product from `ProduitCard` needs no account. The backend identifies an anonymous cart with its own HttpOnly cookie (`EcommerceApp.Panier`), so the frontend has nothing to store or send and uses the same hooks for everyone. `usePanier()` (exported from `@/features/panier`) feeds the Navbar count in `Layout` and the "Votre panier (N articles) est conservé" notice on `ConnexionPage`; read the count as `panier?.resumePanier?.nombreArticles ?? 0`, since `resumePanier` is `null` for an empty cart. The cart mutations write the returned `PanierDto` with `setQueryData`.
+
+Because `ConnexionPage` loads the cart, its tests see a `GET /api/panier` before the login call: find calls by URL in `fetchMock.mock.calls`, not by index.
 - Form errors are shown with `BandeauErreur` (`role="alert"`). Clear them when a field is edited, with `if (mutation.isError) mutation.reset()`: resetting a pending mutation would drop its `mutate(…, { onSuccess })` callback, and with it the redirect.
 
 ### Tests

@@ -30,11 +30,17 @@ The API contract between the two is the DTO shape and the error shape `{ "errors
 
 ## Authentication
 
-Accounts use ASP.NET Core Identity with an HttpOnly auth cookie (`EcommerceApp.Auth`, SameSite Strict), not JWT: the browser sends the cookie on its own, so the frontend stores no token. No roles yet. Endpoints live in `AuthController` (`/api/auth`): `inscription` (creates the account and signs in), `connexion`, `deconnexion`, and `moi` (the current user, 401 when signed out).
+Accounts use ASP.NET Core Identity with an HttpOnly auth cookie (`EcommerceApp.Auth`, SameSite Strict), not JWT: the browser sends the cookie on its own, so the frontend stores no token. No roles yet. Endpoints live in `AuthController` (`/api/auth`): `inscription` (creates the account and signs in), `connexion`, `deconnexion`, and `moi` (the current user, 401 when signed out). `inscription` and `connexion` also merge the visitor's anonymous cart into the account (see Shopping cart below).
 
 - **Protecting an endpoint (the real security):** add `[Authorize]` to the controller or action. Unauthenticated calls get a 401 in the usual `{ "errors": [...] }` shape (from the cookie's `OnRedirectToLogin` event in `Program.cs`, not from the middleware).
 - **Protecting a page (UX only):** nest its routes under `<RequireAuth />` in `src/app/router.tsx`. Signed-out visitors are sent to `/connexion?retour=<page>` and brought back after logging in. The account pages (`CompteLayout`: `/commandes`, `/compte/*`) are protected this way.
 - **Password rules** are defined three times and must stay identical: `InscriptionDtoValidator` (backend), the Identity password options in `Program.cs`, and `REGLES_MOT_DE_PASSE` in `frontend/src/features/auth/mot-de-passe.ts` (8+ characters, an uppercase letter, a digit, a non-alphanumeric character; no lowercase rule).
+
+## Shopping cart
+
+The cart (`/api/panier`) works with or without an account, so its endpoints have no `[Authorize]`. A `Panier` belongs either to a user (`UtilisateurId`) or to an anonymous visitor (`CleAnonyme`, a random `Guid`), never both. The anonymous key travels in a second HttpOnly cookie, `EcommerceApp.Panier` (30 days), which the backend creates on the first item added and the browser then sends on its own: the frontend calls the same endpoints whether signed in or not and stores nothing.
+
+At sign-in or sign-up, `AuthController` merges the anonymous cart into the user's (quantities of the same product are added up; a user with no cart adopts the anonymous one), then deletes the cookie. The frontend therefore invalidates the cart query after `connexion` and `inscription`. Checkout, once built, is where sign-in will be required.
 
 ## Conventions
 

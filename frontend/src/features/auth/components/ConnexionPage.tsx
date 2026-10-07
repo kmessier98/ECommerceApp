@@ -5,11 +5,9 @@ import { useConnexion } from '../api'
 import { destinationSure } from '../redirection'
 import { messagesErreur } from '@/lib/api-client'
 import { BandeauErreur } from './BandeauErreur'
+import { usePanier } from '@/features/panier'
 
 const TUILES = ['bg-[#d8c8b5]', 'bg-[#e3b874]', 'bg-[#bfc9b1]', 'bg-[#d6b8ab]']
-
-// TODO: read the real count from the cart once a cart feature exists
-const ARTICLES_PANIER = 4
 
 export function ConnexionPage() {
   const [courriel, setCourriel] = useState('')
@@ -20,6 +18,8 @@ export function ConnexionPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const messagesErreurConnexion = messagesErreur(connexion.error)
+  const { data: panier } = usePanier()
+  const articlesPanier = panier?.resumePanier?.nombreArticles ?? 0
 
   function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -68,12 +68,12 @@ export function ConnexionPage() {
       <h1 className="font-display text-4xl font-semibold tracking-tight">Connexion</h1>
       <p className="mt-1 text-sm text-stone-600">Content de vous revoir.</p>
 
-      {ARTICLES_PANIER > 0 && (
+      {articlesPanier > 0 && (
         <p className="mt-5 flex gap-2 rounded-lg bg-[#e3eaf3] px-3 py-2.5 text-xs text-[#2c4a6b]">
           <InfoIcon />
           <span>
-            Connectez-vous pour passer au paiement. Votre panier ({ARTICLES_PANIER} article
-            {ARTICLES_PANIER > 1 ? 's' : ''}) est conservé.
+            Connectez-vous pour passer au paiement. Votre panier ({articlesPanier} article
+            {articlesPanier > 1 ? 's' : ''}) est conservé.
           </span>
         </p>
       )}

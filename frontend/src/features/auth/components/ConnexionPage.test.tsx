@@ -68,8 +68,8 @@ describe('ConnexionPage', () => {
     await seConnecter()
 
     expect(await screen.findByText('Page des adresses')).toBeInTheDocument()
-    const [url, init] = fetchMock.mock.calls[0]
-    expect(url).toBe('/api/auth/connexion')
+    // The page also loads the cart, so look the login call up by URL rather than by position.
+    const [, init] = fetchMock.mock.calls.find(([url]) => url === '/api/auth/connexion')!
     expect(JSON.parse(init.body)).toEqual({
       courriel: 'julie@test.com',
       motDePasse: 'MotDePasse1!',
@@ -94,6 +94,34 @@ describe('ConnexionPage', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Courriel ou mot de passe invalide.')
     expect(screen.getByRole('heading', { name: 'Connexion' })).toBeInTheDocument()
+  })
+
+  it('shows how many items the cart holds', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockImplementation((url: string) =>
+          Promise.resolve(
+            new Response(
+              JSON.stringify(
+                url === '/api/panier' ? { articles: [], resumePanier: { nombreArticles: 2 } } : {},
+              ),
+            ),
+          ),
+        ),
+    )
+    renderConnexion('/connexion')
+
+    expect(await screen.findByText(/Votre panier \(2 articles\) est conservé/)).toBeInTheDocument()
+  })
+
+  it('hides the cart notice when the cart is empty', async () => {
+    mockFetch(200, { articles: [], resumePanier: null })
+    renderConnexion('/connexion')
+
+    expect(await screen.findByRole('heading', { name: 'Connexion' })).toBeInTheDocument()
+    expect(screen.queryByText(/Votre panier/)).not.toBeInTheDocument()
   })
 
   it('clears the error as soon as the user edits a field', async () => {

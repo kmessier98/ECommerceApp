@@ -19,12 +19,9 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/catalogue" replace /> },
       { path: 'catalogue', element: <CataloguePage /> },
-      
-      // TEMPORAIRE: le panier exige l'auth pour le moment.
-      {
-        element: <RequireAuth />,
-        children: [{ path: 'panier', element: <PanierPage /> }],
-      },
+
+      { path: 'panier', element: <PanierPage /> },
+
       // Landing page after checkout, once the payment webhook has confirmed the order.
       { path: 'commandes/:numero/confirmation', element: <ConfirmationPage /> },
       {

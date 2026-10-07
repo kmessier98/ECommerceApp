@@ -1,6 +1,7 @@
 import { apiClient, ApiError } from '@/lib/api-client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { ConnexionInput, InscriptionInput, Utilisateur } from './types'
+import { panierKeys } from '@/features/panier/api'
 
 const ENDPOINT = '/api/auth'
 
@@ -31,7 +32,10 @@ export function useInscription() {
   return useMutation({
     mutationFn: (input: InscriptionInput) =>
       apiClient.post<Utilisateur>(`${ENDPOINT}/inscription`, input),
-    onSuccess: (utilisateur) => queryClient.setQueryData(authKeys.moi, utilisateur),
+    onSuccess: (utilisateur) => {
+      queryClient.setQueryData(authKeys.moi, utilisateur)
+      queryClient.invalidateQueries({ queryKey: panierKeys.all })
+    },
   })
 }
 
@@ -40,7 +44,10 @@ export function useConnexion() {
   return useMutation({
     mutationFn: (input: ConnexionInput) =>
       apiClient.post<Utilisateur>(`${ENDPOINT}/connexion`, input),
-    onSuccess: (utilisateur) => queryClient.setQueryData(authKeys.moi, utilisateur),
+    onSuccess: (utilisateur) => {
+      queryClient.setQueryData(authKeys.moi, utilisateur)
+      queryClient.invalidateQueries({ queryKey: panierKeys.all })
+    },
   })
 }
 

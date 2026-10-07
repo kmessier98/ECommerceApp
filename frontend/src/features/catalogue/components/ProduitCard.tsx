@@ -1,21 +1,11 @@
 import { formatPrix } from '@/shared/utils/format'
 import type { Produit } from '../types'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useUtilisateurCourant } from '@/features/auth'
 import { useAjouterArticle } from '@/features/panier/api'
 
 export function ProduitCard({ produit }: { produit: Produit }) {
-  const { data: utilisateur } = useUtilisateurCourant()
-  const navigate = useNavigate()
-  const location = useLocation()
   const { mutate: ajouterArticle } = useAjouterArticle()
 
   const handleAjouter = () => {
-    // TEMPORAIRE: ajouter au panier exige l'auth pour le moment.
-    if (!utilisateur) {
-      navigate('/connexion', { state: { from: location } })
-      return
-    }
     ajouterArticle(produit.id)
   }
 

@@ -4,7 +4,6 @@
     public class PanierDto
     {
         public int Id { get; set; }
-        public int UtilisateurId { get; set; }
         public List<ArticlePanierDto> Articles { get; set; } = new List<ArticlePanierDto>();
         public ResumePanierDto ResumePanier { get; set; }
     }

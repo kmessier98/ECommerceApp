@@ -1,7 +1,7 @@
 import { apiClient, ApiError } from '@/lib/api-client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { ConnexionInput, InscriptionInput, Utilisateur } from './types'
-import { panierKeys } from '@/features/panier/api'
+import { panierKeys } from '@/features/panier'
 
 const ENDPOINT = '/api/auth'
 

@@ -1,6 +1,6 @@
 import { formatPrix } from '@/shared/utils/format'
 import type { Produit } from '../types'
-import { useAjouterArticle } from '@/features/panier/api'
+import { useAjouterArticle } from '@/features/panier'
 
 export function ProduitCard({ produit }: { produit: Produit }) {
   const { mutate: ajouterArticle } = useAjouterArticle()

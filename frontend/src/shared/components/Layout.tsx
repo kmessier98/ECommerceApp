@@ -6,7 +6,6 @@ export function Layout() {
   // Rendered here rather than in CataloguePage so it spans the full width, right under the navbar.
   const surCatalogue = useMatch('/catalogue')
   const { data: panier } = usePanier()
-  console.log(panier);
 
   return (
     <div className="min-h-screen">

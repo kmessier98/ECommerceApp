@@ -61,6 +61,98 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ECommerceApp.Domain.Entities.Commande", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreation")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DatePaiement")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Livraison")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("SousTotal")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Statut")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("StripeSessionId")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<decimal>("TPS")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TVQ")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Total")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UtilisateurId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StripeSessionId")
+                        .IsUnique()
+                        .HasFilter("[StripeSessionId] IS NOT NULL");
+
+                    b.HasIndex("UtilisateurId");
+
+                    b.ToTable("Commande");
+                });
+
+            modelBuilder.Entity("ECommerceApp.Domain.Entities.LigneCommande", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommandeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NomProduit")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("PrixUnitaire")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProduitId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantite")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommandeId");
+
+                    b.HasIndex("ProduitId");
+
+                    b.ToTable("LigneCommande");
+                });
+
             modelBuilder.Entity("ECommerceApp.Domain.Entities.LignePanier", b =>
                 {
                     b.Property<int>("Id")
@@ -131,6 +223,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Prix")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -375,6 +468,36 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ECommerceApp.Domain.Entities.Commande", b =>
+                {
+                    b.HasOne("ECommerceApp.Domain.Entities.Utilisateur", "Utilisateur")
+                        .WithMany()
+                        .HasForeignKey("UtilisateurId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Utilisateur");
+                });
+
+            modelBuilder.Entity("ECommerceApp.Domain.Entities.LigneCommande", b =>
+                {
+                    b.HasOne("ECommerceApp.Domain.Entities.Commande", "Commande")
+                        .WithMany("Articles")
+                        .HasForeignKey("CommandeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ECommerceApp.Domain.Entities.Produit", "Produit")
+                        .WithMany()
+                        .HasForeignKey("ProduitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Commande");
+
+                    b.Navigation("Produit");
+                });
+
             modelBuilder.Entity("ECommerceApp.Domain.Entities.LignePanier", b =>
                 {
                     b.HasOne("ECommerceApp.Domain.Entities.Panier", "Panier")
@@ -439,6 +562,11 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ECommerceApp.Domain.Entities.Commande", b =>
+                {
+                    b.Navigation("Articles");
                 });
 
             modelBuilder.Entity("ECommerceApp.Domain.Entities.Panier", b =>

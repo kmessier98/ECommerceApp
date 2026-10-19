@@ -11,6 +11,8 @@ namespace ECommerceApp.Infrastructure.Data
         public DbSet<Categorie> Categories { get; set; }
         public DbSet<Produit> Produit { get; set; }
         public DbSet<Panier> Panier { get; set; }
+        public DbSet<Commande> Commandes { get; set; }
+        public DbSet<LigneCommande> LignesCommande { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,13 +29,41 @@ namespace ECommerceApp.Infrastructure.Data
                 .HasIndex(u => u.UtilisateurId)
                 .IsUnique();
 
-             modelBuilder.Entity<Panier>()
-                .HasIndex(c => c.CleAnonyme)
-                .IsUnique();
+            modelBuilder.Entity<Panier>()
+               .HasIndex(c => c.CleAnonyme)
+               .IsUnique();
 
             modelBuilder.Entity<LignePanier>()
                 .HasIndex(ci => new { ci.PanierId, ci.ProduitId })
                 .IsUnique();
+
+            modelBuilder.Entity<Commande>(c =>
+            {
+                c.Property(x => x.Statut).HasConversion<string>().HasMaxLength(20);
+
+                c.Property(x => x.StripeSessionId).HasMaxLength(255);
+                c.HasIndex(x => x.StripeSessionId).IsUnique();
+
+                c.HasOne(x => x.Utilisateur)
+                 .WithMany()
+                 .HasForeignKey(x => x.UtilisateurId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+                c.HasMany(x => x.Articles)
+                 .WithOne(l => l.Commande)
+                 .HasForeignKey(l => l.CommandeId)
+                 .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<LigneCommande>(l =>
+            {
+                l.Property(x => x.NomProduit).HasMaxLength(200);
+
+                l.HasOne(x => x.Produit)
+                 .WithMany()
+                 .HasForeignKey(x => x.ProduitId)
+                 .OnDelete(DeleteBehavior.Restrict);
+            });
 
             SeedData(modelBuilder);
         }
@@ -43,6 +73,11 @@ namespace ECommerceApp.Infrastructure.Data
             base.OnConfiguring(optionsBuilder);
 
             optionsBuilder.LogTo(message => Debug.WriteLine(message));
+        }
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            configurationBuilder.Properties<decimal>().HavePrecision(18, 2);
         }
 
         private void SeedData(ModelBuilder modelBuilder)

@@ -31,7 +31,7 @@ namespace ECommerceApp.Infrastructure.Data
                 .HasIndex(c => c.CleAnonyme)
                 .IsUnique();
 
-            modelBuilder.Entity<ArticlePanier>()
+            modelBuilder.Entity<LignePanier>()
                 .HasIndex(ci => new { ci.PanierId, ci.ProduitId })
                 .IsUnique();
 

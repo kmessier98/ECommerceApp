@@ -4,10 +4,10 @@
     public class PanierDto
     {
         public int Id { get; set; }
-        public List<ArticlePanierDto> Articles { get; set; } = new List<ArticlePanierDto>();
+        public List<LignePanierDto> Articles { get; set; } = new List<LignePanierDto>();
         public ResumePanierDto ResumePanier { get; set; }
     }
-    public class ArticlePanierDto
+    public class LignePanierDto
     {
         public int ProduitId { get; set; }
         public string Nom { get; set; }

@@ -48,7 +48,7 @@ namespace ECommerceApp.Application.Services
 
             if (article == null)
             {
-                panier.Articles.Add(new ArticlePanier { PanierId = panier.Id, ProduitId = dto.ProduitId, Quantite = 1 });
+                panier.Articles.Add(new LignePanier { PanierId = panier.Id, ProduitId = dto.ProduitId, Quantite = 1 });
             }
             else
             {
@@ -159,7 +159,7 @@ namespace ECommerceApp.Application.Services
                 if (article == null)
                 {
                     // Le produit n'est pas encore dans le panier de l'utilisateur : on ajoute un NOUVEL article.
-                    panier.Articles.Add(new ArticlePanier
+                    panier.Articles.Add(new LignePanier
                     {
                         ProduitId = articleAnonyme.ProduitId,
                         Quantite = articleAnonyme.Quantite,

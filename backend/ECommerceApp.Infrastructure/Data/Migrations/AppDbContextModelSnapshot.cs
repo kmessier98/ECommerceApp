@@ -22,33 +22,6 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ECommerceApp.Domain.Entities.ArticlePanier", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("PanierId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProduitId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantite")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProduitId");
-
-                    b.HasIndex("PanierId", "ProduitId")
-                        .IsUnique();
-
-                    b.ToTable("ArticlePanier");
-                });
-
             modelBuilder.Entity("ECommerceApp.Domain.Entities.Categorie", b =>
                 {
                     b.Property<int>("Id")
@@ -86,6 +59,33 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                             Id = 4,
                             Nom = "Accessoires"
                         });
+                });
+
+            modelBuilder.Entity("ECommerceApp.Domain.Entities.LignePanier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PanierId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProduitId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantite")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProduitId");
+
+                    b.HasIndex("PanierId", "ProduitId")
+                        .IsUnique();
+
+                    b.ToTable("LignePanier");
                 });
 
             modelBuilder.Entity("ECommerceApp.Domain.Entities.Panier", b =>
@@ -375,7 +375,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ECommerceApp.Domain.Entities.ArticlePanier", b =>
+            modelBuilder.Entity("ECommerceApp.Domain.Entities.LignePanier", b =>
                 {
                     b.HasOne("ECommerceApp.Domain.Entities.Panier", "Panier")
                         .WithMany("Articles")

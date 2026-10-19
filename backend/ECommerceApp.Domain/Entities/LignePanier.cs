@@ -2,8 +2,8 @@
 
 namespace ECommerceApp.Domain.Entities
 {
-    [Table("ArticlePanier")]
-    public class ArticlePanier
+    [Table("LignePanier")]
+    public class LignePanier
     {
         public int Id { get; set; }
         public int ProduitId { get; set; }

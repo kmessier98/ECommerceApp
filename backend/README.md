@@ -20,6 +20,26 @@ La chaîne de connexion se trouve dans `ECommerceApp.Api/appsettings.json` :
 
 Adaptez-la à votre instance SQL Server.
 
+### Secrets (user-secrets)
+
+Les clés sensibles ne sont **pas** dans `appsettings.json` (qui est dans Git) : elles sont dans les *user-secrets* du projet `ECommerceApp.Api`, un fichier `secrets.json` rangé dans le profil Windows (`%APPDATA%\Microsoft\UserSecrets\<UserSecretsId>\`). En développement, ASP.NET Core le fusionne automatiquement avec `appsettings.json`.
+
+Le `UserSecretsId` est dans le `.csproj`, donc versionné ; seules les valeurs sont à remettre sur chaque poste. Sur un nouvel ordinateur : clic droit sur `ECommerceApp.Api` → **Gérer les secrets utilisateur** (Visual Studio), puis recoller les valeurs ci-dessous.
+
+| Clé | Où la trouver |
+| --- | --- |
+| `Stripe:SecretKey` | Tableau de bord Stripe → *Developers* → *API keys* (clé `sk_test_...` en mode test) |
+| `Stripe:WebhookSecret` | Affiché par `stripe listen` (Stripe CLI), valeur `whsec_...` |
+
+```json
+{
+  "Stripe": {
+    "SecretKey": "sk_test_...",
+    "WebhookSecret": "whsec_..."
+  }
+}
+```
+
 ## Commandes
 
 À lancer depuis ce dossier `backend/` :

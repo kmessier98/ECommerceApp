@@ -7,6 +7,7 @@ API Web ASP.NET Core (.NET 10) avec EF Core 10 sur SQL Server, organisée en cou
 - .NET SDK 10
 - SQL Server (par défaut `localhost\SQLEXPRESS`)
 - `dotnet-ef` : `dotnet tool install --global dotnet-ef`
+- [Stripe CLI](https://github.com/stripe/stripe-cli/releases/latest), pour tester les paiements en local (voir [Paiements](#paiements-stripe))
 
 ## Configuration
 
@@ -87,6 +88,46 @@ ASP.NET Core Identity avec authentification par cookie, sans rôles pour l'insta
 - **Mot de passe :** 8 caractères minimum, une majuscule, un chiffre, un caractère spécial. Ces règles sont dans `InscriptionDtoValidator` **et** dans les options d'Identity de `Program.cs`, et doivent correspondre à celles du frontend.
 - **Verrouillage :** 5 échecs de connexion bloquent le compte pendant 5 minutes.
 - **Tester à la main :** passez par Swagger UI (`/swagger`). Le navigateur y conserve le cookie entre les requêtes, comme avec le frontend.
+
+## Paiements (Stripe)
+
+Le paiement passe par **Stripe Checkout** : la page de paiement est hébergée par Stripe, l'API ne voit jamais de numéro de carte.
+
+| Méthode | Route | Accès | Rôle |
+| --- | --- | --- | --- |
+| `POST` | `/api/Commandes` | connecté | Crée une `Commande` `EnAttente` à partir du panier (montants recalculés en base) et renvoie `{ "url": "..." }`, la page Stripe vers laquelle rediriger |
+| `POST` | `/api/Paiements/webhook` | Stripe uniquement | Vérifie la signature Stripe ; sur `checkout.session.completed`, passe la commande à `Payee` et supprime le panier |
+
+Seul le webhook prouve qu'un paiement a eu lieu : le retour sur la page de confirmation, non. Sans webhook reçu, la commande reste `EnAttente` et le panier n'est pas vidé.
+
+### Tester les paiements en local
+
+Stripe ne peut pas joindre `localhost` : la Stripe CLI reçoit les webhooks pour vous et les transmet à l'API.
+
+**Une fois par ordinateur :**
+
+1. Télécharger `stripe_X.Y.Z_windows_x86_64.zip` depuis les [releases de la Stripe CLI](https://github.com/stripe/stripe-cli/releases/latest) et l'extraire dans un dossier dédié (par exemple `C:\Outils\Stripe`).
+2. Ajouter ce **dossier** à la variable `Path` de l'utilisateur (« Modifier les variables d'environnement pour votre compte »), puis rouvrir le terminal. Vérifier avec `stripe --version`.
+3. `stripe login`, puis autoriser dans le navigateur (à refaire si la connexion expire, après 90 jours).
+4. Lancer la commande ci-dessous, puis copier le `whsec_...` qu'elle affiche dans `Stripe:WebhookSecret` des [user-secrets](#secrets-user-secrets). Il est propre à chaque poste, mais ne change pas d'une séance à l'autre.
+
+   ```
+   stripe listen --events checkout.session.completed --forward-to https://localhost:7203/api/paiements/webhook --skip-verify
+   ```
+
+**À chaque séance de test**, dans un terminal laissé ouvert à côté de l'API (profil `https`) :
+
+```
+stripe listen --events checkout.session.completed --forward-to https://localhost:7203/api/paiements/webhook --skip-verify
+```
+
+`--events` est obligatoire avec les versions récentes de la CLI : seul `checkout.session.completed` est traité par l'API (séparer plusieurs événements par des virgules). `--skip-verify` accepte le certificat HTTPS de développement : à n'utiliser qu'en local. Si l'API était lancée avant de renseigner `WebhookSecret`, redémarrez-la : la valeur n'est lue qu'au démarrage.
+
+**Carte de test :** `4242 4242 4242 4242`, n'importe quelle date future, n'importe quel CVC.
+
+Dans le terminal de `stripe listen`, un paiement réussi affiche `checkout.session.completed` suivi de `<-- [200]`. Pour vérifier que le traitement est idempotent, renvoyez le même événement avec `stripe events resend evt_...` : la commande ne doit pas changer.
+
+**En production**, pas de CLI : déclarer `https://<domaine>/api/paiements/webhook` dans le tableau de bord Stripe (*Developers* → *Webhooks*), qui fournit un `whsec_...` propre à cet endpoint.
 
 ## Gestion des erreurs
 

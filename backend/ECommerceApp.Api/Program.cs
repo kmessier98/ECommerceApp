@@ -6,6 +6,7 @@ using ECommerceApp.Application.Validators;
 using ECommerceApp.Domain.Entities;
 using ECommerceApp.Infrastructure.Data;
 using ECommerceApp.Infrastructure.Identity;
+using ECommerceApp.Infrastructure.Paiement;
 using ECommerceApp.Infrastructure.Repositories;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
@@ -49,6 +50,17 @@ builder.Services.AddScoped<IProduitService, ProduitService>();
 builder.Services.AddScoped<IPanierRepository, PanierRepository>();
 builder.Services.AddScoped<IPanierService, PanierService>();
 builder.Services.AddScoped<ICalculPanierService, CalculPanierService>();
+
+// Paiement (Stripe)
+var cleStripe = builder.Configuration["Stripe:SecretKey"];
+if (string.IsNullOrWhiteSpace(cleStripe))
+    throw new InvalidOperationException("Stripe:SecretKey est manquante. Voir backend/README.md, section Secrets.");
+
+builder.Services.Configure<StripeOptions>(builder.Configuration.GetSection("Stripe"));
+builder.Services.AddSingleton<Stripe.IStripeClient>(new Stripe.StripeClient(cleStripe));
+builder.Services.AddScoped<IPaiementService, StripePaiementService>();
+builder.Services.AddScoped<ICommandeRepository, CommandeRepository>();
+builder.Services.AddScoped<ICommandeService, CommandeService>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(CreateTestDtoValidator).Assembly);
 

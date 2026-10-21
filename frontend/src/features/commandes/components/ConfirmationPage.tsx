@@ -1,18 +1,32 @@
+import { useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { useUtilisateurCourant } from '@/features/auth'
+import { ApiError, messagesErreur } from '@/lib/api-client'
 import { formatPrix } from '@/shared/utils/format'
-import { useConfirmationCommande } from '../api'
-import { SuiviCommande } from './SuiviCommande'
+import { useCommande } from '../api'
 
 export function ConfirmationPage() {
   const { numero = '' } = useParams()
-  const { data: commande, isLoading } = useConfirmationCommande(numero)
+  const { data: commande, isPending, isError, error } = useCommande(Number(numero))
+  const { data: utilisateur } = useUtilisateurCourant()
+  const queryClient = useQueryClient()
 
-  if (isLoading) return <p className="text-center text-sm text-stone-500">Chargement…</p>
+  const payee = commande?.statut === 'Payee'
 
-  if (!commande) {
+  // Once paid, the webhook has deleted the cart on the server: refetch what other
+  // components show (e.g. the cart count in the navbar).
+  useEffect(() => {
+    if (payee) queryClient.invalidateQueries()
+  }, [payee, queryClient])
+
+  if (isPending) return <p className="text-center text-sm text-stone-500">Chargement…</p>
+
+  if (isError) {
+    const introuvable = error instanceof ApiError && error.status === 404
     return (
-      <p className="text-center text-sm text-stone-500">
-        Commande introuvable.{' '}
+      <p role="alert" className="text-center text-sm text-stone-500">
+        {introuvable ? 'Commande introuvable.' : messagesErreur(error).join(' ')}{' '}
         <Link to="/commandes" className="text-brique font-semibold underline underline-offset-2">
           Voir mes commandes
         </Link>
@@ -20,8 +34,38 @@ export function ConfirmationPage() {
     )
   }
 
+  if (commande.statut === 'EnAttente') {
+    return (
+      <div role="status" className="mx-auto max-w-md text-center">
+        <h1 className="font-display text-3xl font-semibold">Paiement en cours de confirmation…</h1>
+        <p className="mt-3 text-sm text-stone-600">
+          Cela prend habituellement quelques secondes. Cette page se mettra à jour toute seule.
+        </p>
+      </div>
+    )
+  }
+
+  if (commande.statut === 'Annulee') {
+    return (
+      <p className="text-center text-sm text-stone-500">
+        Cette commande a été annulée.{' '}
+        <Link to="/panier" className="text-brique font-semibold underline underline-offset-2">
+          Retour au panier
+        </Link>
+      </p>
+    )
+  }
+
   const nbArticles = commande.articles.reduce((total, a) => total + a.quantite, 0)
-  const { livraison } = commande
+  const montants = [
+    { label: 'Sous-total', montant: formatPrix(commande.sousTotal) },
+    {
+      label: 'Livraison',
+      montant: commande.livraison === 0 ? 'Gratuite' : formatPrix(commande.livraison),
+    },
+    { label: 'TPS (5 %)', montant: formatPrix(commande.tps) },
+    { label: 'TVQ (9,975 %)', montant: formatPrix(commande.tvq) },
+  ]
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -30,59 +74,43 @@ export function ConfirmationPage() {
           <CheckIcon />
         </span>
         <h1 className="font-display mt-4 text-4xl font-semibold tracking-tight">
-          Merci, {commande.prenomClient}&nbsp;!
+          Merci{utilisateur ? `, ${utilisateur.prenom}` : ''}&nbsp;!
         </h1>
         <p className="mt-3 text-sm text-stone-600">
           Votre paiement est confirmé. La commande{' '}
-          <strong className="text-encre">{commande.numero}</strong> est en préparation.
-          <br />
-          Un reçu a été envoyé à {commande.courriel}.
+          <strong className="text-encre">n°&nbsp;{commande.id}</strong> est enregistrée.
         </p>
       </header>
 
-      <div className="mt-5">
-        <SuiviCommande etapes={commande.etapes} etapeCourante={commande.etapeCourante} />
-      </div>
-
-      <div className="mt-5 grid gap-4 md:grid-cols-[1fr_15rem]">
-        <section className="rounded-2xl border border-stone-200 bg-white px-5 py-5">
-          <h2 className="font-display text-xl font-semibold">Articles ({nbArticles})</h2>
-          <ul className="mt-2.5 space-y-2 border-b border-stone-200 pb-3">
-            {commande.articles.map((article) => (
-              <li key={article.produitId} className="flex items-center gap-3 text-xs">
-                <span
-                  className="size-11 shrink-0 rounded-lg"
-                  style={{ backgroundColor: article.couleur }}
-                  aria-hidden="true"
-                />
-                <span className="flex-1">
-                  {article.nom} × {article.quantite}
-                </span>
-                <span className="font-semibold">{formatPrix(article.montant)}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 flex items-baseline justify-between">
-            <span className="text-xs text-stone-600">Total payé (livraison et taxes incluses)</span>
-            <span className="font-display text-2xl font-semibold" data-testid="total">
-              {formatPrix(commande.total)}
-            </span>
-          </p>
-        </section>
-
-        <section className="rounded-2xl border border-stone-200 bg-white px-5 py-5 text-xs">
-          <h2 className="font-display text-xl font-semibold">Livraison</h2>
-          <address className="mt-2.5 not-italic">
-            {livraison.destinataire}
-            <br />
-            {livraison.adresse}
-            <br />
-            {livraison.villeProvince}
-          </address>
-          <p className="mt-2 text-stone-500">{livraison.methode}</p>
-          <p className="mt-2 font-semibold">Arrivée prévue : {livraison.arriveePrevue}</p>
-        </section>
-      </div>
+      <section className="mt-5 rounded-2xl border border-stone-200 bg-white px-5 py-5">
+        <h2 className="font-display text-xl font-semibold">Articles ({nbArticles})</h2>
+        <ul className="mt-2.5 space-y-2 border-b border-stone-200 pb-3 text-xs">
+          {commande.articles.map((article) => (
+            <li key={article.produitId} className="flex justify-between">
+              <span>
+                {article.nomProduit} × {article.quantite}
+              </span>
+              <span className="font-semibold">
+                {formatPrix(article.prixUnitaire * article.quantite)}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <dl className="mt-3 space-y-1.5 border-b border-stone-200 pb-3 text-xs">
+          {montants.map(({ label, montant }) => (
+            <div key={label} className="flex justify-between">
+              <dt className="text-stone-600">{label}</dt>
+              <dd>{montant}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-3 flex items-baseline justify-between">
+          <span className="text-xs text-stone-600">Total payé</span>
+          <span className="font-display text-2xl font-semibold" data-testid="total">
+            {formatPrix(commande.total)}
+          </span>
+        </p>
+      </section>
 
       <nav className="mt-5 flex flex-wrap justify-center gap-2.5">
         <Link

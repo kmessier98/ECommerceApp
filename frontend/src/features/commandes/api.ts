@@ -1,12 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { mockCommandes } from './mock-commandes'
-import { mockConfirmation } from './mock-confirmation'
-import type { Commande, ConfirmationCommande, SessionPaiement } from './types'
+import type { Commande, CommandeDto, SessionPaiement } from './types'
 import { apiClient } from '@/lib/api-client'
 
 export const commandeKeys = {
   all: ['commandes'] as const,
-  confirmation: (numero: string) => [...commandeKeys.all, 'confirmation', numero] as const,
+  detail: (id: number) => [...commandeKeys.all, id] as const,
 }
 
 // TODO: replace with apiClient.get<Commande[]>('/api/commandes') once the backend endpoint exists.
@@ -26,12 +25,11 @@ export function usePasserCommande() {
   })
 }
 
-// TODO: replace with apiClient.get<ConfirmationCommande>(`/api/commandes/${numero}/confirmation`)
-// once the payment webhook creates the order on the backend.
-export function useConfirmationCommande(numero: string) {
+export function useCommande(id: number) {
   return useQuery({
-    queryKey: commandeKeys.confirmation(numero),
-    queryFn: (): Promise<ConfirmationCommande | null> =>
-      Promise.resolve(numero === mockConfirmation.numero ? mockConfirmation : null),
+    queryKey: commandeKeys.detail(id),
+    queryFn: () => apiClient.get<CommandeDto>(`/api/commandes/${id}`),
+    // The webhook may land after the redirect from Stripe: poll until it does.
+    refetchInterval: (query) => (query.state.data?.statut === 'EnAttente' ? 2000 : false),
   })
 }

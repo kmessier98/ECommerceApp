@@ -19,8 +19,20 @@ const commandePayee: CommandeDto = {
   tvq: 10.77,
   total: 124.17,
   articles: [
-    { produitId: 1, nomProduit: 'Tuque en laine mérinos', prixUnitaire: 38, quantite: 2 },
-    { produitId: 2, nomProduit: 'Tasse en grès émaillé', prixUnitaire: 32, quantite: 1 },
+    {
+      produitId: 1,
+      nomProduit: 'Tuque en laine mérinos',
+      prixUnitaire: 38,
+      quantite: 2,
+      couleur: '#d8c7b3',
+    },
+    {
+      produitId: 2,
+      nomProduit: 'Tasse en grès émaillé',
+      prixUnitaire: 32,
+      quantite: 1,
+      couleur: '#c5d0c8',
+    },
   ],
 }
 

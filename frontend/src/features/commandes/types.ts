@@ -1,3 +1,6 @@
+// Mock types for the order history page (CommandesPage): reconcile them with
+// CommandeDto below once GET /api/commandes exists.
+
 export type StatutCommande =
   'En préparation' | 'Expédiée' | 'Livrée' | 'Remboursée' | 'Paiement échoué' | 'Annulée'
 
@@ -40,6 +43,8 @@ export interface LigneCommande {
   nomProduit: string
   prixUnitaire: number
   quantite: number
+  /** Placeholder background until real product photos exist. */
+  couleur: string
 }
 
 export interface SessionPaiement {

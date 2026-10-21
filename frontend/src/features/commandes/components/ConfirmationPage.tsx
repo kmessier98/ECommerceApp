@@ -86,8 +86,13 @@ export function ConfirmationPage() {
         <h2 className="font-display text-xl font-semibold">Articles ({nbArticles})</h2>
         <ul className="mt-2.5 space-y-2 border-b border-stone-200 pb-3 text-xs">
           {commande.articles.map((article) => (
-            <li key={article.produitId} className="flex justify-between">
-              <span>
+            <li key={article.produitId} className="flex items-center gap-3">
+              <span
+                className="size-11 shrink-0 rounded-lg"
+                style={{ backgroundColor: article.couleur }}
+                aria-hidden="true"
+              />
+              <span className="flex-1">
                 {article.nomProduit} × {article.quantite}
               </span>
               <span className="font-semibold">

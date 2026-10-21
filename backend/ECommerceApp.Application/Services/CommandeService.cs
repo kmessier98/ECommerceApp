@@ -1,4 +1,5 @@
-﻿using ECommerceApp.Application.DTOs;
+﻿using AutoMapper;
+using ECommerceApp.Application.DTOs;
 using ECommerceApp.Application.Exceptions;
 using ECommerceApp.Application.Interfaces;
 using ECommerceApp.Domain.Entities;
@@ -8,13 +9,15 @@ namespace ECommerceApp.Application.Services
 {
     public class CommandeService : ICommandeService
     {
+        private readonly IMapper _mapper;
         private readonly ICommandeRepository _commandeRepository;
         private readonly IPanierRepository _panierRepository;
         private readonly ICalculPanierService _calculPanierService;
         private readonly IPaiementService _paiementService;
 
-        public CommandeService(ICommandeRepository commandeRepository, IPanierRepository panierRepository, ICalculPanierService calculPanierService, IPaiementService paiementService)
+        public CommandeService(IMapper mapper, ICommandeRepository commandeRepository, IPanierRepository panierRepository, ICalculPanierService calculPanierService, IPaiementService paiementService)
         {
+            _mapper = mapper;
             _commandeRepository = commandeRepository;
             _panierRepository = panierRepository;
             _calculPanierService = calculPanierService;
@@ -77,6 +80,15 @@ namespace ECommerceApp.Application.Services
             var panier = await _panierRepository.GetByAsync(p => p.UtilisateurId == commande.UtilisateurId);
             if (panier != null)
                 await _panierRepository.DeleteAsync(panier);
+        }
+
+        public async Task<CommandeDto> Get(int id, int utilisateurId)
+        {
+            var commande = await _commandeRepository.GetByAsync(c => c.Id == id && c.UtilisateurId == utilisateurId);
+            if (commande == null)
+                throw new NotFoundException(nameof(Commande), id);
+
+            return _mapper.Map<CommandeDto>(commande);
         }
     }
 }

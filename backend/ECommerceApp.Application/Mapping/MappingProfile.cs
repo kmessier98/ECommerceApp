@@ -26,9 +26,11 @@ namespace ECommerceApp.Application.Mapping
                 .ForMember(dest => dest.Nom, opt => opt.MapFrom(src => src.Produit.Nom))
                 .ForMember(dest => dest.Prix, opt => opt.MapFrom(src => src.Produit.Prix))
                 .ForMember(dest => dest.Couleur, opt => opt.MapFrom(src => CalculerCouleur(src.ProduitId)))
-                .ForMember(dest =>dest.Description, opt =>opt.MapFrom(src => CalculerDescription(src.ProduitId)));
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => CalculerDescription(src.ProduitId)));
             CreateMap<Panier, PanierDto>()
                 .ForMember(dest => dest.ResumePanier, opt => opt.Ignore());
+            CreateMap<Commande, CommandeDto>();
+            CreateMap<LigneCommande, LigneCommandeDto>();
         }
 
         //TODO données fictif pour le moment...
@@ -102,13 +104,13 @@ namespace ECommerceApp.Application.Mapping
             return productId switch
             {
                 1 => "Couleur : charbon",
-                2 => "Fait main · 350 ml", 
-                3 => "Cire de soya · 45 h", 
+                2 => "Fait main · 350 ml",
+                3 => "Cire de soya · 45 h",
                 4 => "Goût riche · récolte 2026",
-                5 => "Couleur : crème · 130 x 170 cm", 
+                5 => "Couleur : crème · 130 x 170 cm",
                 6 => "Érable massif · 40 x 25 cm",
-                7 => "Taille : unique · 80 % laine", 
-                8 => "Onctueux · 100 % pur érable", 
+                7 => "Taille : unique · 80 % laine",
+                8 => "Onctueux · 100 % pur érable",
                 _ => ""
             };
         }

@@ -1,7 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { mockCommandes } from './mock-commandes'
 import { mockConfirmation } from './mock-confirmation'
-import type { Commande, ConfirmationCommande } from './types'
+import type { Commande, ConfirmationCommande, SessionPaiement } from './types'
+import { apiClient } from '@/lib/api-client'
 
 export const commandeKeys = {
   all: ['commandes'] as const,
@@ -13,6 +14,15 @@ export function useCommandes() {
   return useQuery({
     queryKey: commandeKeys.all,
     queryFn: (): Promise<Commande[]> => Promise.resolve(mockCommandes),
+  })
+}
+
+export function usePasserCommande() {
+  return useMutation({
+    mutationFn: () => apiClient.post<SessionPaiement>('/api/commandes', undefined),
+    onSuccess: ({ url }) => {
+      window.location.assign(url)
+    },
   })
 }
 

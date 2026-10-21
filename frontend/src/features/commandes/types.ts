@@ -51,3 +51,7 @@ export interface ConfirmationCommande {
     arriveePrevue: string
   }
 }
+
+export interface SessionPaiement {
+  url: string
+}

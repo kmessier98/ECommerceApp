@@ -1,7 +1,15 @@
 import { formatPrix } from '@/shared/utils/format'
 import type { ResumePanier } from '../types'
+import { useNavigate } from 'react-router-dom'
+import { useUtilisateurCourant } from '@/features/auth'
+import { usePasserCommande } from '@/features/commandes'
+import { messagesErreur } from '@/lib/api-client'
 
 export function ResumePanier({ totaux }: { totaux: ResumePanier }) {
+  const navigate = useNavigate()
+  const { data: utilisateur, isPending: chargementUtilisateur } = useUtilisateurCourant()
+  const passerCommande = usePasserCommande()
+
   const lignes = [
     { label: 'Sous-total', montant: formatPrix(totaux.sousTotal) },
     {
@@ -11,6 +19,18 @@ export function ResumePanier({ totaux }: { totaux: ResumePanier }) {
     { label: 'TPS (5 %)', montant: formatPrix(totaux.tps) },
     { label: 'TVQ (9,975 %)', montant: formatPrix(totaux.tvq) },
   ]
+
+  function payer() {
+    if (!utilisateur) {
+      navigate(`/connexion?retour=${encodeURIComponent('/panier')}`)
+      return
+    }
+    passerCommande.mutate()
+  }
+
+  // Stays disabled after success too: the redirect to Stripe takes a moment,
+  // and a second click would create a second order.
+  const desactive = chargementUtilisateur || passerCommande.isPending || passerCommande.isSuccess
 
   return (
     <aside className="h-fit rounded-2xl border border-stone-200 bg-white p-5">
@@ -52,14 +72,20 @@ export function ResumePanier({ totaux }: { totaux: ResumePanier }) {
         </div>
       </form>
 
-      {/* TODO: navigate to checkout once it exists */}
       <button
+        onClick={payer}
+        disabled={desactive}
         type="button"
-        className="bg-brique mt-4 flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-sm font-semibold text-white transition hover:brightness-110"
+        className="bg-brique mt-4 flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60"
       >
         <LockIcon />
-        Passer au paiement
+        {desactive && !chargementUtilisateur ? 'Redirection vers le paiement…' : 'Passer au paiement'}
       </button>
+      {passerCommande.isError && (
+        <p role="alert" className="mt-2 text-center text-xs text-red-700">
+          {messagesErreur(passerCommande.error).join(' ')}
+        </p>
+      )}
       <p className="mt-3 text-center text-[10px] text-stone-500">
         Visa · Mastercard · Amex · Apple Pay · Google Pay
       </p>

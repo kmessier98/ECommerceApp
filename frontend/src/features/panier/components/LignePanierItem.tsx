@@ -1,6 +1,7 @@
 import { formatPrix } from '@/shared/utils/format'
 import type { LignePanier } from '../types'
 import { useModifierArticle, useRetirerArticle } from '../api'
+import { imageUrl } from '@/lib/images'
 
 export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
   const { mutate: modifierArticle } = useModifierArticle()
@@ -8,10 +9,15 @@ export function LignePanierItem({ ligne }: { ligne: LignePanier }) {
 
   return (
     <li className="grid grid-cols-[5.25rem_1fr] items-center gap-x-4 gap-y-3 py-4 sm:grid-cols-[5.25rem_1fr_auto_6rem]">
-      <span
-        className="size-21 rounded-lg"
-        style={{ backgroundColor: ligne.couleur }}
-        aria-hidden="true"
+      <img
+        src={`${imageUrl(ligne.imageUrl)}`}
+        alt={ligne.nom}
+        loading="lazy"
+        className="aspect-square w-full object-cover object-center"
+        onError={(e) => {
+          e.currentTarget.onerror = null
+          e.currentTarget.src = '/placeholder.webp'
+        }}
       />
 
       <div>

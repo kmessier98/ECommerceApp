@@ -14,7 +14,7 @@
         public decimal Prix { get; set; }
         public int Quantite { get; set; }
         public string Description { get; set; } // TODO fictif pour le moment...
-        public string Couleur { get; set; } // TODO fictif pour le moment..
+        public string ImageUrl { get; set; }
     }
 
     public class AjouterArticlePanierDto

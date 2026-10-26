@@ -24,7 +24,7 @@ namespace ECommerceApp.Application.Mapping
             CreateMap<LignePanier, LignePanierDto>()
                 .ForMember(dest => dest.Nom, opt => opt.MapFrom(src => src.Produit.Nom))
                 .ForMember(dest => dest.Prix, opt => opt.MapFrom(src => src.Produit.Prix))
-                .ForMember(dest => dest.Couleur, opt => opt.MapFrom(src => CalculerCouleur(src.ProduitId)))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Produit.ImageUrl))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => CalculerDescription(src.ProduitId)));
             CreateMap<Panier, PanierDto>()
                 .ForMember(dest => dest.ResumePanier, opt => opt.Ignore());

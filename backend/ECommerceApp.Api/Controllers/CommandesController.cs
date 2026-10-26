@@ -26,5 +26,14 @@ namespace ECommerceApp.Api.Controllers
             var session = await _commandeService.PasserCommande(utilisateurId);
             return Ok(session);
         }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<CommandeDto>> Get(int id)
+        {
+            var utilisateurId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var commande = await _commandeService.Get(id, utilisateurId);
+            return Ok(commande);
+        }
     }
 }

@@ -19,14 +19,12 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/catalogue" replace /> },
       { path: 'catalogue', element: <CataloguePage /> },
-
       { path: 'panier', element: <PanierPage /> },
-
-      // Landing page after checkout, once the payment webhook has confirmed the order.
-      { path: 'commandes/:numero/confirmation', element: <ConfirmationPage /> },
       {
         element: <RequireAuth />,
         children: [
+          // Landing page after Stripe Checkout: polls the order until the webhook confirms it.
+          { path: 'commandes/:numero/confirmation', element: <ConfirmationPage /> },
           {
             element: <CompteLayout />,
             children: [

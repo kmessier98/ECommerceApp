@@ -6,5 +6,6 @@ namespace ECommerceApp.Application.Interfaces
     {
         Task<SessionPaiementDto> PasserCommande(int utilisateurId);
         Task ConfirmerPaiement(string stripeSessionId);
+        Task<CommandeDto> Get(int id, int utilisateurId);
     }
 }

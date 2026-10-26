@@ -5,6 +5,7 @@ import { useUtilisateurCourant } from '@/features/auth'
 import { ApiError, messagesErreur } from '@/lib/api-client'
 import { formatPrix } from '@/shared/utils/format'
 import { useCommande } from '../api'
+import { imageUrl } from '@/lib/images'
 
 export function ConfirmationPage() {
   const { numero = '' } = useParams()
@@ -87,11 +88,17 @@ export function ConfirmationPage() {
         <ul className="mt-2.5 space-y-2 border-b border-stone-200 pb-3 text-xs">
           {commande.articles.map((article) => (
             <li key={article.produitId} className="flex items-center gap-3">
-              <span
-                className="size-11 shrink-0 rounded-lg"
-                style={{ backgroundColor: article.couleur }}
-                aria-hidden="true"
+              <img
+                src={`${imageUrl(article.imageUrl)}`}
+                alt={article.nomProduit}
+                loading="lazy"
+                className="size-11 shrink-0 rounded-lg object-cover object-center"
+                onError={(e) => {
+                  e.currentTarget.onerror = null
+                  e.currentTarget.src = '/placeholder.webp'
+                }}
               />
+
               <span className="flex-1">
                 {article.nomProduit} × {article.quantite}
               </span>

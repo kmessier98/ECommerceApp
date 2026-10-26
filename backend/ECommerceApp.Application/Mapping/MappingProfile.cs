@@ -30,6 +30,7 @@ namespace ECommerceApp.Application.Mapping
                 .ForMember(dest => dest.ResumePanier, opt => opt.Ignore());
             CreateMap<Commande, CommandeDto>();
             CreateMap<LigneCommande, LigneCommandeDto>()
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Produit.ImageUrl))
                 .ForMember(dest => dest.Couleur, opt => opt.MapFrom(src => CalculerCouleur(src.ProduitId)));
         }
 

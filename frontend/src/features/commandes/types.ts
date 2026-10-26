@@ -45,6 +45,7 @@ export interface LigneCommande {
   quantite: number
   /** Placeholder background until real product photos exist. */
   couleur: string
+  imageUrl: string
 }
 
 export interface SessionPaiement {

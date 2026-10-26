@@ -98,14 +98,14 @@ namespace ECommerceApp.Infrastructure.Data
 
             // --- Produits ---
             modelBuilder.Entity<Produit>().HasData(
-                new Produit { Id = 1, Nom = "Tuque en laine mérinos", Prix = 38.00m, CategorieId = 4 },
-                new Produit { Id = 2, Nom = "Tasse en grès émaillé", Prix = 32.00m, CategorieId = 1 },
-                new Produit { Id = 3, Nom = "Bougie sapin baumier", Prix = 28.00m, CategorieId = 1 },
-                new Produit { Id = 4, Nom = "Sirop d’érable ambré 540 ml", Prix = 16.50m, CategorieId = 3 },
-                new Produit { Id = 5, Nom = "Jeté en laine tissé", Prix = 145.00m, CategorieId = 1 },
-                new Produit { Id = 6, Nom = "Planche à découper en érable", Prix = 64.00m, CategorieId = 2 },
-                new Produit { Id = 7, Nom = "Chaussettes de laine", Prix = 24.00m, CategorieId = 4 },
-                new Produit { Id = 8, Nom = "Beurre d’érable 250 g", Prix = 11.00m, CategorieId = 3 }
+                new Produit { Id = 1, Nom = "Tuque en laine mérinos", Prix = 38.00m, CategorieId = 4, ImageUrl = "/images/products/tuque-merinos.webp" },
+                new Produit { Id = 2, Nom = "Tasse en grès émaillé", Prix = 32.00m, CategorieId = 1, ImageUrl = "/images/products/tasse-gres.webp" },
+                new Produit { Id = 3, Nom = "Bougie sapin baumier", Prix = 28.00m, CategorieId = 1, ImageUrl = "/images/products/bougie-sapin.webp" },
+                new Produit { Id = 4, Nom = "Sirop d’érable ambré 540 ml", Prix = 16.50m, CategorieId = 3, ImageUrl = "/images/products/sirop-erable.webp" },
+                new Produit { Id = 5, Nom = "Jeté en laine tissé", Prix = 145.00m, CategorieId = 1, ImageUrl = "/images/products/jete-laine.webp" },
+                new Produit { Id = 6, Nom = "Planche à découper en érable", Prix = 64.00m, CategorieId = 2, ImageUrl = "/images/products/planche-erable.webp" },
+                new Produit { Id = 7, Nom = "Chaussettes de laine", Prix = 24.00m, CategorieId = 4, ImageUrl = "/images/products/chaussettes-laine.webp" },
+                new Produit { Id = 8, Nom = "Beurre d’érable 250 g", Prix = 11.00m, CategorieId = 3, ImageUrl = "/images/products/beurre-erable.webp" }
             );
         }
     }

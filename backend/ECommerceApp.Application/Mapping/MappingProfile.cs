@@ -20,8 +20,7 @@ namespace ECommerceApp.Application.Mapping
                .ForMember(dest => dest.EnPromotion, opt => opt.MapFrom(src => CalculerEnPromotion(src.Id)))
                .ForMember(dest => dest.Badge, opt => opt.MapFrom(src => CalculerBadge(src.Id)))
                .ForMember(dest => dest.RangPopularite, opt => opt.MapFrom(src => CalculerPopularite(src.Id)))
-               .ForMember(dest => dest.DateAjout, opt => opt.MapFrom(src => CalculerDateAjout(src.Id)))
-               .ForMember(dest => dest.Couleur, opt => opt.MapFrom(src => CalculerCouleur(src.Id)));
+               .ForMember(dest => dest.DateAjout, opt => opt.MapFrom(src => CalculerDateAjout(src.Id)));
             CreateMap<LignePanier, LignePanierDto>()
                 .ForMember(dest => dest.Nom, opt => opt.MapFrom(src => src.Produit.Nom))
                 .ForMember(dest => dest.Prix, opt => opt.MapFrom(src => src.Produit.Prix))

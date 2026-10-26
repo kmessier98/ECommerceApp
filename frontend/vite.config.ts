@@ -23,6 +23,11 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false, // accept the ASP.NET Core dev certificate
         },
+        '/images': {
+          target: env.API_PROXY_TARGET || 'https://localhost:7203',
+          changeOrigin: true,
+          secure: false, // accept the ASP.NET Core dev certificate
+        },
       },
     },
     test: {

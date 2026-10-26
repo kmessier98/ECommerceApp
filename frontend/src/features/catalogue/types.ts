@@ -17,8 +17,7 @@ export interface Produit {
   /** Lower is more popular. */
   rangPopularite: number
   dateAjout: string
-  /** Placeholder background until real product photos exist. */
-  couleur: string
+  imageUrl: string
 }
 
 export type Tri = 'rang-popularite' | 'prix-croissant' | 'prix-decroissant' | 'nouveautes'

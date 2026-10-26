@@ -7,6 +7,6 @@
         public decimal Prix { get; set; }
         public int CategorieId { get; set; }
         public Categorie Categorie { get; set; }
-
+        public string ImageUrl { get; set; }
     }
 }

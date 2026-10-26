@@ -1,6 +1,7 @@
 import { formatPrix } from '@/shared/utils/format'
 import type { Produit } from '../types'
 import { useAjouterArticle } from '@/features/panier'
+import { imageUrl } from '@/lib/images'
 
 export function ProduitCard({ produit }: { produit: Produit }) {
   const { mutate: ajouterArticle } = useAjouterArticle()
@@ -11,18 +12,22 @@ export function ProduitCard({ produit }: { produit: Produit }) {
 
   return (
     <article className="flex flex-col">
-      <div
-        className="relative aspect-square rounded-xl"
-        style={{ backgroundColor: produit.couleur }}
-      >
+      <div className="relative aspect-square overflow-hidden rounded-xl">
+        <img
+          src={`${imageUrl(produit.imageUrl)}`}
+          alt={produit.nom}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+          onError={(e) => {
+            e.currentTarget.onerror = null
+            e.currentTarget.src = '/placeholder.webp'
+          }}
+        />
         {produit.badge && (
           <span className="absolute top-2.5 left-2.5 rounded-full bg-white px-2.5 py-1 text-[11px] font-semibold">
             {produit.badge}
           </span>
         )}
-        <span className="absolute bottom-2.5 left-2.5 text-[10px] tracking-widest text-stone-600 uppercase">
-          Photo produit
-        </span>
       </div>
 
       <p className="mt-2.5 text-xs text-stone-500">{produit.categorie.nom}</p>

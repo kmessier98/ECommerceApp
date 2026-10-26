@@ -13,6 +13,6 @@ namespace ECommerceApp.Application.DTOs
         public BadgeType? Badge { get; set; } // TODO fictif pour le moment..
         public int RangPopularite { get; set; } //TODO fictif pour le moment.. ... Lower is more popular
         public DateTime DateAjout { get; set; } //TODO fictif pour le moment..
-        public string Couleur { get; set; } //TODO fictif pour le moment..
+        public string ImageUrl { get; set; }
     }
 }

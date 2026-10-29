@@ -10,8 +10,7 @@ export interface LignePanier {
   description: string
   prix: number
   quantite: number
-  /** Placeholder background until real product photos exist. */
-  couleur: string
+  imageUrl: string
 }
 
 export interface ResumePanier {

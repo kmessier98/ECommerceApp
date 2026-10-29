@@ -40,6 +40,7 @@ namespace ECommerceApp.Infrastructure.Repositories
         {
             return await _dbContext.Commandes
                .Include(a => a.Articles)
+                .ThenInclude(p => p.Produit)
                .SingleOrDefaultAsync(predicate);
         }
 

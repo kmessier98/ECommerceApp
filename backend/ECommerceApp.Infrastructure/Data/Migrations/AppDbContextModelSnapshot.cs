@@ -218,6 +218,10 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                     b.Property<int>("CategorieId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -237,6 +241,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             CategorieId = 4,
+                            ImageUrl = "/images/products/tuque-merinos.webp",
                             Nom = "Tuque en laine mérinos",
                             Prix = 38.00m
                         },
@@ -244,6 +249,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                         {
                             Id = 2,
                             CategorieId = 1,
+                            ImageUrl = "/images/products/tasse-gres.webp",
                             Nom = "Tasse en grès émaillé",
                             Prix = 32.00m
                         },
@@ -251,6 +257,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                         {
                             Id = 3,
                             CategorieId = 1,
+                            ImageUrl = "/images/products/bougie-sapin.webp",
                             Nom = "Bougie sapin baumier",
                             Prix = 28.00m
                         },
@@ -258,6 +265,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                         {
                             Id = 4,
                             CategorieId = 3,
+                            ImageUrl = "/images/products/sirop-erable.webp",
                             Nom = "Sirop d’érable ambré 540 ml",
                             Prix = 16.50m
                         },
@@ -265,6 +273,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                         {
                             Id = 5,
                             CategorieId = 1,
+                            ImageUrl = "/images/products/jete-laine.webp",
                             Nom = "Jeté en laine tissé",
                             Prix = 145.00m
                         },
@@ -272,6 +281,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                         {
                             Id = 6,
                             CategorieId = 2,
+                            ImageUrl = "/images/products/planche-erable.webp",
                             Nom = "Planche à découper en érable",
                             Prix = 64.00m
                         },
@@ -279,6 +289,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                         {
                             Id = 7,
                             CategorieId = 4,
+                            ImageUrl = "/images/products/chaussettes-laine.webp",
                             Nom = "Chaussettes de laine",
                             Prix = 24.00m
                         },
@@ -286,6 +297,7 @@ namespace ECommerceApp.Infrastructure.Data.Migrations
                         {
                             Id = 8,
                             CategorieId = 3,
+                            ImageUrl = "/images/products/beurre-erable.webp",
                             Nom = "Beurre d’érable 250 g",
                             Prix = 11.00m
                         });

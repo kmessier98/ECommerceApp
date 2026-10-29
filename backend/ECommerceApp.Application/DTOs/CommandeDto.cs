@@ -27,6 +27,7 @@ namespace ECommerceApp.Application.DTOs
         public string NomProduit { get; set; } = string.Empty;
         public decimal PrixUnitaire { get; set; }
         public int Quantite { get; set; }
+        public string ImageUrl { get; set; }
         public string Couleur { get; set; } = string.Empty; // TODO fictif pour le moment
     }
 }

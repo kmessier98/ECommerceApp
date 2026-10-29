@@ -6,39 +6,47 @@ import { ProfilPage } from '@/features/compte'
 import { PanierPage } from '@/features/panier'
 import { TestsPage } from '@/features/tests'
 import { CompteLayout } from '@/shared/components/CompteLayout'
+import { ErreurServeur } from '@/shared/components/ErreurServeur'
 import { Layout } from '@/shared/components/Layout'
 import { NotFound } from '@/shared/components/NotFound'
 import { PageAVenir } from '@/shared/components/PageAVenir'
 
 export const router = createBrowserRouter([
-  // Full-screen pages with their own header, so they sit outside the shared Layout.
-  { path: 'connexion', element: <ConnexionPage /> },
-  { path: 'inscription', element: <CreerComptePage /> },
   {
-    element: <Layout />,
+    // Pathless root route: its errorElement catches an unreachable API (thrown by queries, see
+    // lib/query-client.ts) or a render error anywhere below, including in Layout's Navbar.
+    errorElement: <ErreurServeur />,
     children: [
-      { index: true, element: <Navigate to="/catalogue" replace /> },
-      { path: 'catalogue', element: <CataloguePage /> },
-      { path: 'panier', element: <PanierPage /> },
+      // Full-screen pages with their own header, so they sit outside the shared Layout.
+      { path: 'connexion', element: <ConnexionPage /> },
+      { path: 'inscription', element: <CreerComptePage /> },
       {
-        element: <RequireAuth />,
+        element: <Layout />,
         children: [
-          // Landing page after Stripe Checkout: polls the order until the webhook confirms it.
-          { path: 'commandes/:numero/confirmation', element: <ConfirmationPage /> },
+          { index: true, element: <Navigate to="/catalogue" replace /> },
+          { path: 'catalogue', element: <CataloguePage /> },
+          { path: 'panier', element: <PanierPage /> },
           {
-            element: <CompteLayout />,
+            element: <RequireAuth />,
             children: [
-              { path: 'commandes', element: <CommandesPage /> },
-              // TODO: replace the placeholders once these tabs have mockups
-              { path: 'compte', element: <ProfilPage /> },
-              { path: 'compte/adresses', element: <PageAVenir titre="Adresses" /> },
-              { path: 'compte/paiement', element: <PageAVenir titre="Moyens de paiement" /> },
+              // Landing page after Stripe Checkout: polls the order until the webhook confirms it.
+              { path: 'commandes/:numero/confirmation', element: <ConfirmationPage /> },
+              {
+                element: <CompteLayout />,
+                children: [
+                  { path: 'commandes', element: <CommandesPage /> },
+                  // TODO: replace the placeholders once these tabs have mockups
+                  { path: 'compte', element: <ProfilPage /> },
+                  { path: 'compte/adresses', element: <PageAVenir titre="Adresses" /> },
+                  { path: 'compte/paiement', element: <PageAVenir titre="Moyens de paiement" /> },
+                ],
+              },
             ],
           },
+          { path: 'tests', element: <TestsPage /> },
+          { path: '*', element: <NotFound /> },
         ],
       },
-      { path: 'tests', element: <TestsPage /> },
-      { path: '*', element: <NotFound /> },
     ],
   },
 ])

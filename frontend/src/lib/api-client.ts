@@ -16,6 +16,23 @@ export class ApiError extends Error {
   }
 }
 
+/** Thrown when `fetch` itself fails: the API is down or the network is unreachable. */
+export class ServeurInjoignableError extends Error {
+  constructor(cause: unknown) {
+    super('Server unreachable', { cause })
+    this.name = 'ServeurInjoignableError'
+  }
+}
+
+/**
+ * True when the API could not be reached: a network failure, or a proxy/gateway reporting
+ * the API down (in dev, the Vite proxy answers 502 when the API is not running).
+ */
+export function estServeurInjoignable(error: unknown): boolean {
+  if (error instanceof ServeurInjoignableError) return true
+  return error instanceof ApiError && [502, 503, 504].includes(error.status)
+}
+
 async function parseErrors(response: Response): Promise<string[]> {
   try {
     const body = await response.json()
@@ -32,15 +49,20 @@ async function parseErrors(response: Response): Promise<string[]> {
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${BASE_URL}${path}`, {
-    ...init,
-    headers: {
-      Accept: 'application/json',
-      ...(init.body ? { 'Content-Type': 'application/json' } : {}),
-      ...init.headers,
-    },
-    credentials: 'include',
-  })
+  let response: Response
+  try {
+    response = await fetch(`${BASE_URL}${path}`, {
+      ...init,
+      headers: {
+        Accept: 'application/json',
+        ...(init.body ? { 'Content-Type': 'application/json' } : {}),
+        ...init.headers,
+      },
+      credentials: 'include',
+    })
+  } catch (error) {
+    throw new ServeurInjoignableError(error)
+  }
 
   if (!response.ok) throw new ApiError(response.status, await parseErrors(response))
   if (response.status === 204) return undefined as T
@@ -60,6 +82,8 @@ export const apiClient = {
 
 export function messagesErreur(error: Error | null): string[] {
   if (!error) return []
+  // Checked first: a 502 from the proxy is an ApiError whose message is an English "Bad Gateway".
+  if (estServeurInjoignable(error)) return ['Impossible de joindre le serveur. Réessayez.']
   if (error instanceof ApiError) return error.errors
 
   return ['Impossible de joindre le serveur. Réessayez.']
